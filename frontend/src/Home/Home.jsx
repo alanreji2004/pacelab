@@ -1,4 +1,5 @@
 import styles from './Home.module.css';
+import cyberImg from '../assets/cyberpunk.webp';
 
 const Home = () => {
   return (
@@ -20,6 +21,9 @@ const Home = () => {
           The grid tiles have a transparent background and white thin borders, angled to achieve the 3D effect shown in the original image.
         </p>
       </div>
+        <div className={styles.imageWrapper}>
+          <img src={cyberImg} alt="Cyber Illustration" fill className={styles.heroImage} />
+        </div>
     </div>
   );
 };
