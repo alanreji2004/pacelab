@@ -1,9 +1,22 @@
 import styles from './Home.module.css';
 import cyberImg from '../assets/cyberpunk.webp';
+import pacelablogo from '../assets/logo.webp';
 
 const Home = () => {
   return (
     <div className={styles.perspectiveContainer}>
+              <nav className={styles.navbar}>
+        <div className={styles.navLogo}>
+          <img src={pacelablogo} alt="PaceLab Logo" />
+        </div>
+        
+          <li><a href="#about">About</a></li>
+          <li><a href="#leaderboard">Leaderboard</a></li>
+        
+        <button className={styles.registerButton}>Register</button>
+      </nav>
+
+
       <div className={styles.gridPlane}></div>
 
       <div className={styles.content}>
