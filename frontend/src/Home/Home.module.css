@@ -80,7 +80,6 @@
 .titleMain {
   display: block;
   color: #00f7ff;
-  animation:textGlitch 2s infinite;
 }
 
 .buttons {
@@ -98,6 +97,7 @@
   transition: all 0.3s ease;
   cursor: pointer;
   border-radius: 8px;
+  font-family: "Orbitron", sans-serif;
 }
 
 .ctaButton:hover {
@@ -111,6 +111,7 @@
   right: 3rem;
   bottom: 0;
   z-index: 10;
+  overflow: hidden;
 }
 
 .heroImage {
@@ -175,4 +176,52 @@
 .registerButton:hover {
   background-color: rgba(0, 255, 255, 0.15);
   transform: scale(1.05);
+}
+
+.btn {
+  position: relative;
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  color: #0ff;
+  text-transform: uppercase;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1rem;
+  text-decoration: none;
+  letter-spacing: 2px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn1 {
+  background: rgba(0, 255, 255, 0.05);
+  font-weight: 400;
+}
+
+.btn1 svg {
+  height: 45px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.btn1 rect {
+  fill: none;
+  stroke: #0ff;
+  stroke-width: 2;
+  stroke-dasharray: 422, 0;
+  transition: all 0.35s linear;
+}
+
+.btn1:hover {
+  background: rgba(0, 255, 255, 0);
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.btn1:hover rect {
+  stroke-width: 3;
+  stroke-dasharray: 15, 310;
+  stroke-dashoffset: 48;
+  transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
 }

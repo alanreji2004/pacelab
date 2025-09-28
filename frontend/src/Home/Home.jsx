@@ -24,10 +24,22 @@ const Home = () => {
           <span className={styles.titleMain}>CAPTURE</span>
           <span className={styles.titleMain}>THE FLAG</span>
         </h1>
-        <div className={styles.buttons}>
-          <button className={styles.ctaButton}>JOIN</button>
-          <button className={styles.ctaButton}>HOW IT WORKS</button>
-        </div>
+<div className={styles.buttons}>
+  <a href="#join" className={`${styles.btn} ${styles.btn1}`}>
+    <svg>
+      <rect x="2" y="2" fill="none" width="100%" height="100%" />
+    </svg>
+    JOIN
+  </a>
+
+  <a href="#how-it-works" className={`${styles.btn} ${styles.btn1}`}>
+    <svg>
+      <rect x="2" y="2" fill="none" width="100%" height="100%" />
+    </svg>
+    HOW IT WORKS
+  </a>
+</div>
+
       </div>
 
       <div className={styles.imageWrapper}>
