@@ -236,3 +236,67 @@
   stroke-dashoffset: 48;
   transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
 }
+
+
+@keyframes glitch {
+  2%,64% { transform: translate(2px,0) skew(0deg); }
+  4%,60% { transform: translate(-2px,0) skew(0deg); }
+  62%    { transform: translate(0,0) skew(5deg); }
+}
+
+@keyframes glitchTop {
+  2%,64% { transform: translate(2px,-2px); }
+  4%,60% { transform: translate(-2px,2px); }
+  62%    { transform: translate(13px,-1px) skew(-13deg); }
+}
+
+@keyframes glitchBottom {
+  2%,64% { transform: translate(-2px,0); }
+  4%,60% { transform: translate(-2px,0); }
+  62%    { transform: translate(-22px,5px) skew(21deg); }
+}
+
+.heading {
+  position: relative;
+  display: inline-block;
+  animation: glitch 2s linear 1;
+}
+
+.heading::before,
+.heading::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  color: inherit;
+  pointer-events: none;
+}
+
+.heading::before {
+  animation: glitchTop 2s linear 1;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+
+.heading::after {
+  animation: glitchBottom 2s linear 1;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+
+.buttons {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

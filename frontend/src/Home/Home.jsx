@@ -20,7 +20,7 @@ const Home = () => {
             <div className={styles.gridPlane}></div>
 
             <div className={styles.content}>
-                <h1 className={styles.heading}>
+                <h1 className={styles.heading} data-text="CAPTURE THE FLAG">
                     <span className={styles.titleMain}>CAPTURE</span>
                     <span className={styles.titleMain}>THE FLAG</span>
                 </h1>
