@@ -17,7 +17,7 @@ return (
                 <span className={styles.titleMain}>THE FLAG</span>
             </h1>
             <div className={styles.buttons}>
-                <Link to="/login" className={`${styles.btn} ${styles.btn1}`}>
+                <Link to="/profile" className={`${styles.btn} ${styles.btn1}`}>
                     <svg>
                         <rect x="2" y="2" fill="none" width="100%" height="100%" />
                     </svg>

@@ -3,12 +3,25 @@ import styles from './Navbar.module.css';
 import pacelablogo from '../assets/logo.webp';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [username, setUsername] = useState(null);
   const menuRef = useRef(null);
   const hamburgerRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUsername(user.displayName || user.email.split('@')[0]);
+      } else {
+        setUsername(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,7 +61,11 @@ const Navbar = () => {
         <li><Link to="/leaderboard">Leaderboard</Link></li>
       </ul>
 
-      <button className={styles.registerButton} onClick={() => navigate('/login')}>Register</button>
+      {username ? (
+        <button className={styles.registerButton} onClick={() => navigate('/profile')}>{username}</button>
+      ) : (
+        <button className={styles.registerButton} onClick={() => navigate('/login')}>Register</button>
+      )}
 
       <button
         ref={hamburgerRef}
@@ -74,7 +91,13 @@ const Navbar = () => {
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
           <li><Link to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</Link></li>
           <li><Link to="/leaderboard" onClick={() => setMenuOpen(false)}>Leaderboard</Link></li>
-          <li><button className={styles.registerButton} onClick={() => { setMenuOpen(false); navigate('/login'); }}>Register</button></li>
+          <li>
+            {username ? (
+              <button className={styles.registerButton} onClick={() => { setMenuOpen(false); navigate('/profile'); }}>{username}</button>
+            ) : (
+              <button className={styles.registerButton} onClick={() => { setMenuOpen(false); navigate('/login'); }}>Register</button>
+            )}
+          </li>
         </ul>
       </div>
     </nav>
