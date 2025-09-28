@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+
+.perspectiveContainer {
+  width: 100%;
+  min-height: 100vh;
+  perspective: 1000px;
+  overflow: hidden;
+  background-color: #010408;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  max-width: 900px;
+  padding: 2rem;
+  margin-top: 6rem;
+  font-family: "Orbitron", sans-serif;
+  color: #0ff;
+  line-height: 1.6;
+  font-size: 1.05rem;
+}
+
+.content p {
+  margin-bottom: 1.5rem;
+  text-indent: 2em;
+  text-align:justify;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    max-width: 720px;
+    font-size: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    max-width: 92%;
+    font-size: 0.95rem;
+    margin-top: 5rem;
+    padding: 1rem;
+    text-align: justify;
+    margin-top: 10rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    font-size: 0.9rem;
+    margin-top: 4.5rem;
+    margin-top: 10rem;
+  }
+}

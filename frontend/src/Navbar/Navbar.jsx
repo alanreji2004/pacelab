@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './Navbar.module.css';
 import pacelablogo from '../assets/logo.webp';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -40,9 +41,9 @@ const Navbar = () => {
       </div>
 
       <ul className={styles.navLinks}>
-        <li><a href="#about">About</a></li>
-        <li><a href="#challenges">Challenges</a></li>
-        <li><a href="#leaderboard">Leaderboard</a></li>
+        <li><Link to="/about">About</Link></li>
+        <li><Link to="/challenges">Challenges</Link></li>
+        <li><Link to="/leaderboard">Leaderboard</Link></li>
       </ul>
 
       <button className={styles.registerButton}>Register</button>
@@ -68,9 +69,9 @@ const Navbar = () => {
         aria-hidden={!menuOpen}
       >
         <ul>
-          <li><a href="#about" onClick={() => setMenuOpen(false)}>About</a></li>
-          <li><a href="#challenges" onClick={() => setMenuOpen(false)}>Challenges</a></li>
-          <li><a href="#leaderboard" onClick={() => setMenuOpen(false)}>Leaderboard</a></li>
+          <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
+          <li><Link to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</Link></li>
+          <li><Link to="/leaderboard" onClick={() => setMenuOpen(false)}>Leaderboard</Link></li>
           <li><button className={styles.registerButton} onClick={() => setMenuOpen(false)}>Register</button></li>
         </ul>
       </div>
