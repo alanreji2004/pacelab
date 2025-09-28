@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from './Home.module.css';
 import cyberImg from '../assets/cyberpunk.webp';
 import Navbar from '../Navbar/Navbar';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     
@@ -16,12 +17,12 @@ return (
                 <span className={styles.titleMain}>THE FLAG</span>
             </h1>
             <div className={styles.buttons}>
-                <a href="#join" className={`${styles.btn} ${styles.btn1}`}>
+                <Link to="/login" className={`${styles.btn} ${styles.btn1}`}>
                     <svg>
                         <rect x="2" y="2" fill="none" width="100%" height="100%" />
                     </svg>
                     JOIN
-                </a>
+                </Link>
 
                 <a href="#how-it-works" className={`${styles.btn} ${styles.btn1}`}>
                     <svg>
