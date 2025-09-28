@@ -35,8 +35,19 @@ export default function Profile() {
   const [memberToRemove, setMemberToRemove] = useState(null)
   const [newTeamName, setNewTeamName] = useState("")
   const [joinTeamId, setJoinTeamId] = useState("")
+  const [previewTeam, setPreviewTeam] = useState(null)
+  const [previewMembers, setPreviewMembers] = useState([])
   const [error, setError] = useState("")
   const [info, setInfo] = useState("")
+
+  const flashError = (msg) => {
+    setError(msg)
+    setTimeout(() => setError(""), 2000)
+  }
+  const flashInfo = (msg) => {
+    setInfo(msg)
+    setTimeout(() => setInfo(""), 2000)
+  }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => setCurrentUser(u))
@@ -94,18 +105,13 @@ export default function Profile() {
         return
       }
       const usersRef = collection(db, "users")
-      const q = query(usersRef, where("__name__", "in", memberIds.slice(0, 10)))
-      const fetched = await getDocs(q)
-      const membersList = fetched.docs.map((d) => ({ id: d.id, ...d.data() }))
-      if (memberIds.length > 10) {
-        const remaining = [...memberIds.slice(10)]
-        const chunks = []
-        while (remaining.length) chunks.push(remaining.splice(0, 10))
-        for (const chunk of chunks) {
-          const q2 = query(usersRef, where("__name__", "in", chunk))
-          const r2 = await getDocs(q2)
-          r2.forEach((d) => membersList.push({ id: d.id, ...d.data() }))
-        }
+      const chunks = []
+      for (let i = 0; i < memberIds.length; i += 10) chunks.push(memberIds.slice(i, i + 10))
+      const membersList = []
+      for (const chunk of chunks) {
+        const q2 = query(usersRef, where("__name__", "in", chunk))
+        const r2 = await getDocs(q2)
+        r2.forEach((d) => membersList.push({ id: d.id, ...d.data() }))
       }
       const orderedMembers = memberIds.map(
         (id) => membersList.find((u) => u.id === id) || { id, username: "Unknown", score: 0 }
@@ -126,12 +132,11 @@ export default function Profile() {
   const handleCreateTeam = async (e) => {
     e.preventDefault()
     if (!newTeamName.trim()) {
-      setError("Enter team name")
+      flashError("Enter team name")
       return
     }
     try {
-      const teamsCol = collection(db, "teams")
-      const teamRef = await addDoc(teamsCol, {
+      const teamRef = await addDoc(collection(db, "teams"), {
         name: newTeamName.trim(),
         createdBy: currentUser.uid,
         members: [currentUser.uid],
@@ -139,14 +144,17 @@ export default function Profile() {
         score: 0
       })
       await updateDoc(doc(db, "users", currentUser.uid), { teamId: teamRef.id })
+      flashInfo("Team created")
       setShowCreateModal(false)
     } catch {
-      setError("Could not create team")
+      flashError("Could not create team")
     }
   }
 
   const openJoinModal = () => {
     setJoinTeamId("")
+    setPreviewTeam(null)
+    setPreviewMembers([])
     setError("")
     setInfo("")
     setShowJoinModal(true)
@@ -155,41 +163,45 @@ export default function Profile() {
   const handleFetchTeamForJoin = async (e) => {
     e.preventDefault()
     if (!joinTeamId.trim()) {
-      setError("Enter team id")
+      flashError("Enter team id")
       return
     }
     try {
       const tRef = doc(db, "teams", joinTeamId.trim())
       const snap = await getDoc(tRef)
       if (!snap.exists()) {
-        setError("Team not found")
+        flashError("Team not found")
         return
       }
       const teamData = { id: snap.id, ...snap.data() }
-      setCurrentTeam(teamData)
-      const memberDocs = []
+      setPreviewTeam(teamData)
+      const members = []
       for (const m of teamData.members || []) {
         const md = await getDoc(doc(db, "users", m))
-        memberDocs.push({
-          id: m,
-          ...(md.exists() ? md.data() : { username: "Unknown", score: 0 })
-        })
+        members.push({ id: m, ...(md.exists() ? md.data() : { username: "Unknown", score: 0 }) })
       }
-      setTeamMembers(memberDocs)
-      setInfo("Confirm to join this team")
+      setPreviewMembers(members)
+      flashInfo("Confirm to join this team")
     } catch {
-      setError("Failed to fetch team")
+      flashError("Failed to fetch team")
     }
   }
 
   const handleConfirmJoin = async () => {
-    if (!currentTeam?.id) return
+    if (!previewTeam?.id) return
+    if ((previewTeam.members || []).length >= 3) {
+      flashError("Team full")
+      return
+    }
     try {
-      await updateDoc(doc(db, "teams", currentTeam.id), { members: arrayUnion(currentUser.uid) })
-      await updateDoc(doc(db, "users", currentUser.uid), { teamId: currentTeam.id })
+      await updateDoc(doc(db, "teams", previewTeam.id), { members: arrayUnion(currentUser.uid) })
+      await updateDoc(doc(db, "users", currentUser.uid), { teamId: previewTeam.id })
+      flashInfo("Joined team successfully")
+      setPreviewTeam(null)
+      setPreviewMembers([])
       setShowJoinModal(false)
     } catch {
-      setError("Failed to join")
+      flashError("Failed to join")
     }
   }
 
@@ -200,22 +212,25 @@ export default function Profile() {
       await updateDoc(doc(db, "users", memberToRemove.id), { teamId: null })
       setShowMemberRemoveModal(false)
       setMemberToRemove(null)
-    } catch {
-      setError("Failed to remove member")
+      flashInfo("Member removed")
+    } catch(error) {
+        console.log(error)
+      flashError("Failed to remove member")
     }
   }
 
   const handleLeaveTeam = async () => {
     if (!currentTeam) return
     if (currentTeam.createdBy === currentUser.uid) {
-      setError("Creator must delete team or transfer ownership")
+      flashError("Creator must delete team")
       return
     }
     try {
       await updateDoc(doc(db, "teams", currentTeam.id), { members: arrayRemove(currentUser.uid) })
       await updateDoc(doc(db, "users", currentUser.uid), { teamId: null })
+      flashInfo("Left team")
     } catch {
-      setError("Failed to leave team")
+      flashError("Failed to leave team")
     }
   }
 
@@ -227,14 +242,14 @@ export default function Profile() {
 
   const handleDeleteTeam = async (confirmText) => {
     if (confirmText !== "DELETE") {
-      setError("Type DELETE to confirm")
+      flashError("Type DELETE to confirm")
       return
     }
     try {
       const tRef = doc(db, "teams", currentTeam.id)
       const tSnap = await getDoc(tRef)
       if (!tSnap.exists()) {
-        setError("Team not found")
+        flashError("Team not found")
         return
       }
       const mems = tSnap.data().members || []
@@ -243,8 +258,9 @@ export default function Profile() {
       batch.delete(tRef)
       await batch.commit()
       setShowDeleteModal(false)
+      flashInfo("Team deleted")
     } catch {
-      setError("Failed to delete team")
+      flashError("Failed to delete team")
     }
   }
 
@@ -276,20 +292,19 @@ export default function Profile() {
             <div className={styles.teamHeader}>
               <div>
                 <h2 className={styles.teamName}>{currentTeam?.name || "Team"}</h2>
-                    <p className={styles.teamMeta}>
-                    Team ID: <span className={styles.teamId}>{currentTeam?.id}</span>
-                    <button
-                        className={styles.copyBtn}
-                        onClick={() => {
-                        navigator.clipboard.writeText(currentTeam?.id || "")
-                        setInfo("Team ID copied!")
-                        setTimeout(() => setInfo(""), 2000)
-                        }}
-                    >
-                        Copy
-                    </button>
-                    </p>
-                </div>
+                <p className={styles.teamMeta}>
+                  Team ID: <span className={styles.teamId}>{currentTeam?.id}</span>
+                  <button
+                    className={styles.copyBtn}
+                    onClick={() => {
+                      navigator.clipboard.writeText(currentTeam?.id || "")
+                      flashInfo("Team ID copied")
+                    }}
+                  >
+                    Copy
+                  </button>
+                </p>
+              </div>
               <div className={styles.teamControls}>
                 {currentTeam?.createdBy === currentUser.uid ? (
                   <button className={styles.cta} onClick={openDeleteModal}>Delete Team</button>
@@ -348,16 +363,16 @@ export default function Profile() {
                 <button type="submit" className={styles.cta}>Fetch</button>
               </div>
             </form>
-            {currentTeam && currentTeam.id && (
+            {previewTeam && (
               <div className={styles.preview}>
-                <p className={styles.previewTitle}>{currentTeam.name}</p>
+                <p className={styles.previewTitle}>{previewTeam.name}</p>
                 <div className={styles.previewMembers}>
-                  {teamMembers.map((m) => (
+                  {previewMembers.map((m) => (
                     <div key={m.id} className={styles.previewMember}>{m.username || m.email}</div>
                   ))}
                 </div>
                 <div className={styles.modalActions}>
-                  <button className={styles.ghost} onClick={() => { setCurrentTeam(null); setTeamMembers([]) }}>Cancel</button>
+                  <button className={styles.ghost} onClick={() => { setPreviewTeam(null); setPreviewMembers([]) }}>Cancel</button>
                   <button className={styles.cta} onClick={handleConfirmJoin}>Confirm Join</button>
                 </div>
               </div>
