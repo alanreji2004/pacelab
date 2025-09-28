@@ -72,6 +72,23 @@
   opacity: 0.5;
 }
 
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.showButton {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #0ff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
 .button {
   width: 100%;
   padding: 1.2rem;
@@ -87,7 +104,12 @@
   transition: background 0.2s ease;
 }
 
-.button:hover {
+.button:disabled {
+  background-color: #00cccc;
+  cursor: not-allowed;
+}
+
+.button:hover:enabled {
   background-color: #00cccc;
 }
 
@@ -96,6 +118,43 @@
   text-align: center;
   margin-bottom: 1rem;
   font-size: 0.95rem;
+}
+
+.success {
+  color: #0f0;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.switchText {
+  text-align: center;
+  color: #0ff;
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.switchLink {
+  color: #00cccc;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.switchLink:hover {
+  text-decoration: underline;
+}
+
+.forgotText {
+  text-align: center;
+  margin-top: 0.8rem;
+  color: #0ff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.forgotText:hover {
+  color: #00cccc;
 }
 
 @media (max-width: 480px) {

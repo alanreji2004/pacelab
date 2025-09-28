@@ -1,10 +1,9 @@
 import { useState } from "react"
 import { auth, db } from "../firebase"
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
-import { collection, query, where, getDocs, doc, setDoc } from "firebase/firestore"
-import { Link } from "react-router-dom"
+import { doc, setDoc } from "firebase/firestore"
+import { Link, useNavigate } from "react-router-dom"
 import styles from "./Signup.module.css"
-import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [email, setEmail] = useState("")
@@ -12,13 +11,14 @@ export default function Signup() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate();
-
+  const navigate = useNavigate()
 
   const handleSignup = async (e) => {
     e.preventDefault()
     setError("")
+    setSuccess("")
     setLoading(true)
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
@@ -32,13 +32,14 @@ export default function Signup() {
         solvedChallenges: [],
         createdAt: new Date()
       })
-      navigate("/");
+      setSuccess("Account registered successfully!")
+      setTimeout(() => navigate("/"), 1500)
     } catch (err) {
-        if (err.code === "auth/email-already-in-use") {
-            setError("Email is already in use");
-        } else {
-            setError(err.message);
-    }
+      if (err.code === "auth/email-already-in-use") {
+        setError("Email is already in use")
+      } else {
+        setError(err.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -50,6 +51,7 @@ export default function Signup() {
       <form onSubmit={handleSignup} className={styles.form}>
         <h2 className={styles.title}>Sign Up</h2>
         {error && <p className={styles.error}>{error}</p>}
+        {success && <p className={styles.success}>{success}</p>}
         <input
           type="text"
           placeholder="Username"

@@ -157,3 +157,19 @@
     font-size: 0.85rem;
   }
 }
+
+.success {
+  color: #0f0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.switchText {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.switchLink {
+  color: #0ff;
+  text-decoration: none;
+}
