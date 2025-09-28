@@ -39,6 +39,7 @@ const Home = () => {
 
         <ul className={styles.navLinks}>
           <li><a href="#about">About</a></li>
+          <li><a href="#leaderboard">Challenges</a></li>
           <li><a href="#leaderboard">Leaderboard</a></li>
         </ul>
 
