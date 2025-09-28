@@ -57,7 +57,18 @@
   mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 100%);
   mask-repeat: no-repeat;
   mask-size: cover;
+
+  animation: gridMove 2s linear infinite;
 }
+
+@keyframes gridMove {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 0 52px, 0 0;
+  }
+} 
 
 .content {
   position: relative;
