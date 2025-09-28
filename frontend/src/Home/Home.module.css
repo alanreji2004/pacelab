@@ -49,7 +49,7 @@
       #0ff 52px
     );
   background-size: 100% 52px, 52px 100%;
-  opacity: 0.17;
+  opacity: 0.24;
   pointer-events: none;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 100%);
   -webkit-mask-repeat: no-repeat;
