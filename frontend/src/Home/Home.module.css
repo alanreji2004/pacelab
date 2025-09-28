@@ -425,6 +425,7 @@
 }
 
 .mobileMenu .registerButton {
+  display: block;
   width: 100%;
   margin-top: 0.4rem;
 }
@@ -524,7 +525,7 @@
   .navLinks {
     display: none;
   }
-  .registerButton {
+  .navbar .registerButton {
     display: none;
   }
   .hamburger {
@@ -597,8 +598,11 @@
   .navLinks {
     display: none;
   }
-  .registerButton {
+  .navbar .registerButton {
     display: none;
+  }
+  .registerButton {
+    display: inline-block;
   }
   .hamburger {
     display: flex;

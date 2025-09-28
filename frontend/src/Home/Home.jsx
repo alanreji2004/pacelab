@@ -6,6 +6,7 @@ import pacelablogo from '../assets/logo.webp';
 const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -17,7 +18,10 @@ const Home = () => {
 
   useEffect(() => {
     const onDocClick = (e) => {
-      if (menuOpen && menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+      if (!menuRef.current) return;
+      const clickedInsideMenu = menuRef.current.contains(e.target);
+      const clickedHamburger = hamburgerRef.current && hamburgerRef.current.contains(e.target);
+      if (menuOpen && !clickedInsideMenu && !clickedHamburger) setMenuOpen(false);
     };
     const onKey = (e) => {
       if (menuOpen && e.key === 'Escape') setMenuOpen(false);
@@ -39,13 +43,14 @@ const Home = () => {
 
         <ul className={styles.navLinks}>
           <li><a href="#about">About</a></li>
-          <li><a href="#leaderboard">Challenges</a></li>
+          <li><a href="#challenges">Challenges</a></li>
           <li><a href="#leaderboard">Leaderboard</a></li>
         </ul>
 
         <button className={styles.registerButton}>Register</button>
 
         <button
+          ref={hamburgerRef}
           className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`}
           onClick={() => setMenuOpen((s) => !s)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -63,9 +68,11 @@ const Home = () => {
         ref={menuRef}
         className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
         role="menu"
+        aria-hidden={!menuOpen}
       >
         <ul>
           <li><a href="#about" onClick={() => setMenuOpen(false)}>About</a></li>
+          <li><a href="#challenges" onClick={() => setMenuOpen(false)}>Challenges</a></li>
           <li><a href="#leaderboard" onClick={() => setMenuOpen(false)}>Leaderboard</a></li>
           <li><button className={styles.registerButton} onClick={() => setMenuOpen(false)}>Register</button></li>
         </ul>
