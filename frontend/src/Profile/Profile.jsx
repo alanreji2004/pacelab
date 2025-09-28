@@ -288,10 +288,15 @@ export default function Profile() {
           </div>
         )}
         {currentUser && currentUserDoc && currentUserDoc.teamId && (
+        <>
+          <div className={styles.centerBox}>
+            <p className={styles.lead}>{currentUserDoc.username || currentUser.email}</p>
+            <p className={styles.subLead}>{currentUser.email}</p>
+            </div>
           <div className={styles.teamBox}>
             <div className={styles.teamHeader}>
               <div>
-                <h2 className={styles.teamName}>{currentTeam?.name || "Team"}</h2>
+                <h2 className={styles.teamName}>{currentTeam?.name || "Team"}</h2><br />
                 <p className={styles.teamMeta}>
                   Team ID: <span className={styles.teamId}>{currentTeam?.id}</span>
                   <button
@@ -303,7 +308,11 @@ export default function Profile() {
                   >
                     Copy
                   </button>
-                </p>
+                </p><br />
+                <div className={styles.totalRow}>
+                    <strong>Total Score:</strong>
+                    <span>{currentTeam?.score || 0}</span>
+                </div>
               </div>
               <div className={styles.teamControls}>
                 {currentTeam?.createdBy === currentUser.uid ? (
@@ -319,11 +328,14 @@ export default function Profile() {
                 <span>Points</span>
                 {currentTeam?.createdBy === currentUser.uid && <span>Action</span>}
               </div>
+              
               {loadingTeam && <p className={styles.lead}>Loading members...</p>}
               {!loadingTeam && !teamMembers.length && <p className={styles.lead}>No members</p>}
               {!loadingTeam && teamMembers.map((m) => (
                 <div key={m.id} className={styles.memberRow}>
-                  <div className={styles.memberName}>{m.username || m.email}</div>
+                  <div className={styles.memberName}>{m.username || m.email}  {m.id === currentTeam?.createdBy && (
+                        <span className={styles.leaderTag}>[Leader]</span>
+                        )}</div>
                   <div className={styles.memberScore}>{m.score || 0}</div>
                   {currentTeam?.createdBy === currentUser.uid && m.id !== currentUser.uid && (
                     <button className={styles.removeBtn} onClick={() => { setMemberToRemove(m); setShowMemberRemoveModal(true) }}>Remove</button>
@@ -334,6 +346,7 @@ export default function Profile() {
             {error && <p className={styles.error}>{error}</p>}
             {info && <p className={styles.info}>{info}</p>}
           </div>
+          </>
         )}
       </div>
       {showCreateModal && (
