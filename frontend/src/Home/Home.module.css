@@ -80,7 +80,6 @@
   max-width: 600px;
 }
 
-
 .heading {
   font-size: 4.5rem;
   font-weight: 900;
@@ -150,7 +149,7 @@
 .navLogo img {
   height: 45px;
   width: auto;
-  margin-left: 1rem;
+  margin-left: 0rem;
   margin-top: 1.4rem;
 }
 
@@ -237,7 +236,6 @@
   transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-
 @keyframes glitch {
   2%,64% { transform: translate(2px,0) skew(0deg); }
   4%,60% { transform: translate(-2px,0) skew(0deg); }
@@ -322,4 +320,304 @@
 .heroImage {
   position: relative;
   animation: imageGlitch 1s steps(2, end) 1;
+}
+
+.hamburger {
+  display: none;
+  background: transparent;
+  border: 0;
+  padding: 0.5rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+.hamburgerBox {
+  display: inline-block;
+  width: 26px;
+  height: 18px;
+  position: relative;
+}
+
+.hamburgerInner,
+.hamburgerInner::before,
+.hamburgerInner::after {
+  width: 100%;
+  height: 2px;
+  background: #00f7ff;
+  position: absolute;
+  left: 0;
+  transition: transform 0.28s ease, opacity 0.2s ease;
+  will-change: transform, opacity;
+}
+
+.hamburgerInner {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hamburgerInner::before {
+  content: "";
+  top: -6px;
+}
+
+.hamburgerInner::after {
+  content: "";
+  top: 6px;
+}
+
+.hamburger.open .hamburgerInner {
+  transform: rotate(45deg);
+}
+
+.hamburger.open .hamburgerInner::before {
+  transform: rotate(90deg) translateX(-1px);
+  top: 0;
+}
+
+.hamburger.open .hamburgerInner::after {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.mobileMenu {
+  position: absolute;
+  top: 78px;
+  right: 1rem;
+  width: calc(100% - 2rem);
+  max-width: 320px;
+  background: rgba(1, 4, 8, 0.98);
+  border-radius: 10px;
+  padding: 0.85rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  border: 1px solid rgba(0,255,255,0.06);
+  transform-origin: top right;
+  transform: translateY(-8px) scale(0.98);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(.2,.9,.3,1);
+  z-index: 35;
+}
+
+.mobileMenuOpen {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobileMenu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.2rem;
+}
+
+.mobileMenu a {
+  color: #0ff;
+  text-decoration: none;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem 0.4rem;
+  display: block;
+}
+
+.mobileMenu .registerButton {
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    margin-left: 4rem;
+    margin-top: 10rem;
+    max-width: 520px;
+  }
+  .heading {
+    font-size: 3.75rem;
+    line-height: 1.15;
+  }
+  .imageWrapper {
+    width: 520px;
+    height: 520px;
+    right: 1.5rem;
+    bottom: -10px;
+  }
+  .navLogo img {
+    height: 40px;
+  }
+  .buttons {
+    gap: 0.75rem;
+  }
+  .btn {
+    font-size: 0.95rem;
+    padding: 0.7rem 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .perspectiveContainer {
+    height: auto;
+  }
+  .content {
+    margin-top: 10rem;
+    margin: 6.5rem auto 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 92%;
+    text-align: center;
+    padding: 0 1.25rem;
+  }
+  .heading {
+    font-size: 3rem;
+    line-height: 1.05;
+    margin-bottom: 1.25rem;
+  }
+  .titleMain {
+    display: block;
+    word-break: break-word;
+  }
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    transform: translateY(0);
+    width: 100%;
+  }
+  .btn {
+    width: 85%;
+    max-width: 360px;
+    padding: 0.9rem 1rem;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .btn1 svg {
+    height: 44px;
+  }
+  .imageWrapper {
+    position: relative;
+    width: 72vw;
+    height: auto;
+    right: auto;
+    bottom: auto;
+    margin: 2rem auto 0;
+    z-index: 5;
+  }
+  .heroImage {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    animation: imageGlitch 2s steps(2,end) 1;
+  }
+  .navbar {
+    padding: 0 1rem;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .navLogo img {
+    height: 38px;
+    margin-top: 0;
+  }
+  .navLinks {
+    display: none;
+  }
+  .registerButton {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+  .mobileMenu {
+    top: 64px;
+    right: 0.75rem;
+    max-width: 340px;
+  }
+  .gridPlane {
+    height: 120%;
+    transform: rotateX(70deg) translateZ(-120px) translateY(70px);
+  }
+  .gridPlane::before {
+    opacity: 0.12;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
+  }
+}
+
+@media (max-width: 420px) {
+  .content {
+    margin: 5.5rem auto 0;
+    padding: 0 1rem;
+    max-width: 96%;
+    text-align: center;
+  }
+  .heading {
+    font-size: 2.4rem;
+    line-height: 1.05;
+    margin-bottom: 0.9rem;
+  }
+  .titleMain {
+    display: block;
+    font-size: inherit;
+  }
+  .buttons {
+    gap: 0.6rem;
+  }
+  .btn {
+    width: 92%;
+    max-width: 420px;
+    padding: 0.8rem 0.9rem;
+    font-size: 0.95rem;
+  }
+  .btn1 rect {
+    stroke-width: 2;
+  }
+  .imageWrapper {
+    position: relative;
+    width: 92vw;
+    height: auto;
+    margin: 1.5rem auto 0;
+    right: auto;
+    bottom: auto;
+    overflow: visible;
+  }
+  .heroImage {
+    width: 100%;
+    height: auto;
+    animation: imageGlitch 2s steps(2,end) 1;
+  }
+  
+  .navbar {
+    height: 60px;
+    padding: 0 0.75rem;
+    justify-content: space-between;
+  }
+  .navLinks {
+    display: none;
+  }
+  .registerButton {
+    display: none;
+  }
+  .hamburger {
+    display: flex;
+  }
+  .mobileMenu {
+    top: 60px;
+    right: 0.6rem;
+    max-width: 340px;
+  }
+  .navLogo img {
+    height: 34px;
+  }
+  .gridPlane {
+    transform: rotateX(70deg) translateZ(-100px) translateY(40px);
+  }
+  .gridPlane::before {
+    opacity: 0.09;
+  }
+  .heading, .heroImage, .buttons {
+    will-change: transform, opacity;
+  }
 }
