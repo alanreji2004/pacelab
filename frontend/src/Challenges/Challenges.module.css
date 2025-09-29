@@ -189,3 +189,24 @@ html, body {
   color: var(--muted);
   opacity: 0.9;
 }
+
+.cardActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.viewButton {
+  background-color: #444;
+  color: #0ff;
+  border: none;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease-in-out;
+}
+
+.viewButton:hover {
+  background-color: #585858;
+}

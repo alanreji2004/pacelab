@@ -120,6 +120,15 @@ export default function Challenges() {
                 <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
               </div>
               <div className={styles.cardActions}>
+                  {c.link && (
+                    <button 
+                    className={styles.viewButton} 
+                    onClick={() => window.open(c.link, "_blank")}
+                    >
+                    View Challenge
+                    </button>
+                )}
+
                 {hasSolved(c) ? (
                   <div className={styles.solvedText}>Solved</div>
                 ) : (
