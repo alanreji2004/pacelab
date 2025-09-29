@@ -11,6 +11,7 @@ import AdminLogin from "./AdminLogin/AdminLogin"
 import AdminDashboard from "./AdminDashboard/AdminDashboard"
 import AddChallenges from "./AddChallenges/AddChallenges"
 import Challenges from "./Challenges/Challenges"
+import LeaderBoard from "./LeaderBoard/LeaderBoard"
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,8 @@ const router = createBrowserRouter([
       { path: "/admin/login", element: <AdminLogin /> },
       { path: "/admin/dashboard", element: <AdminDashboard /> },
       { path: "/admin/add-challenge", element: <AddChallenges /> },
-      { path: "/challenges", element: <Challenges/> }
+      { path: "/challenges", element: <Challenges/> },
+      { path: "/leaderboard", element: <LeaderBoard /> }
     ],
   },
 ])
