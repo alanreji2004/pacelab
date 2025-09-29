@@ -285,8 +285,7 @@ export default function Profile() {
                 <div className={styles.actions}>
                 {currentUser.email === ADMIN_EMAIL ? (
                     <>
-                    <button className={styles.cta} onClick={() => navigate("/admin/dashboard")}>Add and Publish Problems</button>
-                    <button className={styles.ghost} onClick={() => navigate("/admin/teams")}>View Teams</button>
+                    <button className={styles.cta} onClick={() => navigate("/admin/dashboard")}>View Dashboard</button>
                     </>
                 ) : (
                     <>
