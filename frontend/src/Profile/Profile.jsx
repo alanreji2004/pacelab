@@ -20,6 +20,7 @@ import {
     query,
     where
 } from "firebase/firestore"
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
 
 export default function Profile() {
     const navigate = useNavigate()
@@ -277,18 +278,28 @@ export default function Profile() {
                     <button className={styles.cta} onClick={() => navigate("/login")}>Go to Login</button>
                 </div>
                 )}
-                {currentUser && currentUserDoc && !currentUserDoc.teamId && (
-                <div className={styles.centerBox}>
-                    <p className={styles.lead}>{currentUserDoc.username || currentUser.email}</p>
-                    <p className={styles.subLead}>{currentUser.email}</p>
-                    <div className={styles.actions}>
+               {currentUser && currentUserDoc && !currentUserDoc.teamId && (
+            <div className={styles.centerBox}>
+                <p className={styles.lead}>{currentUserDoc.username || currentUser.email}</p>
+                <p className={styles.subLead}>{currentUser.email}</p>
+                <div className={styles.actions}>
+                {currentUser.email === ADMIN_EMAIL ? (
+                    <>
+                    <button className={styles.cta} onClick={() => navigate("/admin/dashboard")}>Add and Publish Problems</button>
+                    <button className={styles.ghost} onClick={() => navigate("/admin/teams")}>View Teams</button>
+                    </>
+                ) : (
+                    <>
                     <button className={styles.cta} onClick={openCreateModal}>Create Team</button>
                     <button className={styles.ghost} onClick={openJoinModal}>Join Team</button>
-                    </div>
-                    {error && <p className={styles.error}>{error}</p>}
-                    {info && <p className={styles.info}>{info}</p>}
-                </div>
+                    </>
                 )}
+                </div>
+                {error && <p className={styles.error}>{error}</p>}
+                {info && <p className={styles.info}>{info}</p>}
+            </div>
+            )}
+
             {currentUser && currentUserDoc && currentUserDoc.teamId && (
             <>
             <div className={styles.centerBox}>
