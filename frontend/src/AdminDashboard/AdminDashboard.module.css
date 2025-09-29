@@ -71,12 +71,14 @@
   color: var(--accent);
   outline: none;
   font-size: 0.95rem;
+  width: 100%;
 }
 
 .row {
   display: flex;
   gap: 0.6rem;
   margin-top: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .primaryButton {
@@ -140,42 +142,54 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  min-width: 0;
 }
 
 .cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .cardTitle {
   font-weight: 700;
   font-size: 1rem;
+  word-break: break-word;
+  flex: 1;
 }
 
 .cardScore {
   background: rgba(0,0,0,0.2);
   padding: 0.25rem 0.5rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .cardBody {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.3rem;
   font-size: 0.9rem;
   color: var(--muted);
+  word-break: break-word;
 }
 
 .cardLink {
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.cardSolves {
   white-space: nowrap;
-  max-width: 70%;
 }
 
 .cardActions {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
   justify-content: flex-end;
 }
 
@@ -190,6 +204,7 @@
   justify-content: flex-end;
   gap: 0.6rem;
   margin-bottom: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .modalWrap {
@@ -226,6 +241,7 @@
   border: 2px solid var(--accent);
   background: transparent;
   color: var(--accent);
+  width: 100%;
 }
 
 .modalRow {
@@ -233,6 +249,7 @@
   gap: 0.6rem;
   justify-content: center;
   margin-top: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .formError {
@@ -266,7 +283,11 @@
     padding: 0.6rem 0.6rem;
     font-size: 0.9rem;
   }
-  .grid {
-    grid-template-columns: 1fr;
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cardBody {
+    font-size: 0.85rem;
   }
 }
