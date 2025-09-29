@@ -1,0 +1,140 @@
+import { useState, useEffect } from "react"
+import { db, auth } from "../firebase"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { collection, query, where, onSnapshot, doc, runTransaction, updateDoc, arrayUnion, increment } from "firebase/firestore"
+import Navbar from "../Navbar/Navbar"
+import styles from "./Challenges.module.css"
+import { sha256 } from "js-sha256"
+
+export default function Challenges() {
+  const [user, loading] = useAuthState(auth)
+  const [challenges, setChallenges] = useState([])
+  const [team, setTeam] = useState(null)
+  const [userData, setUserData] = useState(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedChallenge, setSelectedChallenge] = useState(null)
+  const [flagInput, setFlagInput] = useState("")
+  const [error, setError] = useState("")
+  const [loadingAction, setLoadingAction] = useState(false)
+
+  useEffect(() => {
+    const q = query(collection(db, "challenges"), where("status", "==", "published"))
+    const unsub = onSnapshot(q, snap => {
+      setChallenges(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+    })
+    return () => unsub()
+  }, [])
+
+  useEffect(() => {
+    if (!user) return
+    const unsubUser = onSnapshot(doc(db, "users", user.uid), d => {
+      if (d.exists()) {
+        setUserData({ id: d.id, ...d.data() })
+        if (d.data().teamId) {
+          const unsubTeam = onSnapshot(doc(db, "teams", d.data().teamId), td => {
+            if (td.exists()) setTeam({ id: td.id, ...td.data() })
+          })
+          return () => unsubTeam()
+        }
+      }
+    })
+    return () => unsubUser()
+  }, [user])
+
+  if (loading) return null
+  if (!user || !userData) return <Navbar />
+
+  const openModal = c => {
+    setSelectedChallenge(c)
+    setFlagInput("")
+    setError("")
+    setModalOpen(true)
+  }
+
+  const handleSubmitFlag = async () => {
+    if (!flagInput || !selectedChallenge) return
+    setLoadingAction(true)
+    setError("")
+    const flagHash = sha256(flagInput.trim())
+    try {
+      await runTransaction(db, async transaction => {
+        const challengeRef = doc(db, "challenges", selectedChallenge.id)
+        const challengeDoc = await transaction.get(challengeRef)
+        if (!challengeDoc.exists()) throw new Error("Challenge not found")
+        const challengeData = challengeDoc.data()
+        if (challengeData.flagHash !== flagHash) throw new Error("Incorrect flag")
+        if (userData.solvedChallenges?.includes(selectedChallenge.id)) throw new Error("Already solved")
+        if (team?.solvedChallenges?.includes(selectedChallenge.id)) throw new Error("Already solved by team")
+        const userRef = doc(db, "users", user.uid)
+        transaction.update(userRef, {
+          score: increment(challengeData.score),
+          solvedChallenges: arrayUnion(selectedChallenge.id)
+        })
+        if (team) {
+          const teamRef = doc(db, "teams", team.id)
+          transaction.update(teamRef, {
+            score: increment(challengeData.score),
+            solvedChallenges: arrayUnion(selectedChallenge.id)
+          })
+        }
+        transaction.update(challengeRef, {
+          solves: increment(1)
+        })
+      })
+      setModalOpen(false)
+    } catch (err) {
+      setError(err.message)
+    }
+    setLoadingAction(false)
+  }
+
+  const hasSolved = c => {
+    if (!userData) return false
+    if (userData.solvedChallenges?.includes(c.id)) return true
+    if (team?.solvedChallenges?.includes(c.id)) return true
+    return false
+  }
+
+  return (
+    <div className={styles.page}>
+      <Navbar />
+      <div className={styles.container}>
+        <h1 className={styles.heading}>Challenges</h1>
+        <div className={styles.grid}>
+          {challenges.length === 0 && <div className={styles.empty}>No published challenges</div>}
+          {challenges.map(c => (
+            <div key={c.id} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <div className={styles.cardTitle}>{c.name}</div>
+                <div className={styles.cardScore}>{c.score}</div>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
+              </div>
+              <div className={styles.cardActions}>
+                {hasSolved(c) ? (
+                  <div className={styles.solvedText}>Solved</div>
+                ) : (
+                  <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>Submit Flag</button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {modalOpen && (
+        <div className={styles.modalWrap}>
+          <div className={styles.modal}>
+            <h3 className={styles.modalTitle}>Submit Flag</h3>
+            <input className={styles.input} placeholder="Enter flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
+            {error && <div className={styles.errorText}>{error}</div>}
+            <div className={styles.modalRow}>
+              <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Submit"}</button>
+              <button className={styles.secondaryButton} onClick={() => setModalOpen(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
