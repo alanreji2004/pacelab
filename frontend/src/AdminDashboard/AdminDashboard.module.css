@@ -1,0 +1,24 @@
+.dashboard {
+  min-height: 100vh;
+  background: #010408;
+  color: #0ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 120px;
+  font-family: "Orbitron", sans-serif;
+}
+
+.heading {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.content {
+  width: 80%;
+  max-width: 800px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  border: 1px solid #0ff;
+  text-align: center;
+}

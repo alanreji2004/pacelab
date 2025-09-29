@@ -1,0 +1,34 @@
+.navbar {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  height: 70px;
+  border-radius: 10px;
+}
+.navLogo img {
+  height: 45px;
+  width: auto;
+  cursor: pointer;
+}
+.logoutButton {
+  border: 2px solid #0ff;
+  padding: 0.5rem 1.5rem;
+  background: transparent;
+  color: #0ff;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.logoutButton:hover {
+  background-color: rgba(0, 255, 255, 0.15);
+  transform: scale(1.05);
+}
