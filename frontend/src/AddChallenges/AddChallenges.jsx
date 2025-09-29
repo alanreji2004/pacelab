@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom"
 import { useAuthState } from "react-firebase-hooks/auth"
 import AdminNavbar from "../AdminNavbar/AdminNavbar"
 import styles from "./AddChallenges.module.css"
-import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc, getDocs } from "firebase/firestore"
+import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc, getDocs,arrayRemove } from "firebase/firestore"
 import { sha256 } from "js-sha256"
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
@@ -108,30 +108,40 @@ export default function AddChallenges() {
     setLoadingAction(false)
   }
 
-  const handleDelete = async (id) => {
-    setLoadingAction(true)
-    const challengeDoc = await (await getDocs(query(collection(db, "challenges"), where("__name__", "==", id)))).docs[0]
-    if (challengeDoc) {
-      const cdata = challengeDoc.data()
-      const score = cdata.score
-      const usersSnap = await getDocs(collection(db, "users"))
-      for (const u of usersSnap.docs) {
-        const udata = u.data()
-        if (udata.solvedChallenges?.includes(id)) {
-          await updateDoc(doc(db, "users", u.id), { score: (udata.score || 0) - score })
-          if (udata.teamId) {
-            const teamDoc = await (await getDocs(query(collection(db, "teams"), where("__name__", "==", udata.teamId)))).docs[0]
-            if (teamDoc) {
-              const tdata = teamDoc.data()
-              await updateDoc(doc(db, "teams", teamDoc.id), { score: (tdata.score || 0) - score })
-            }
+
+    const handleDelete = async (id) => {
+  setLoadingAction(true)
+  const challengeDoc = await (await getDocs(query(collection(db, "challenges"), where("__name__", "==", id)))).docs[0]
+  if (challengeDoc) {
+    const cdata = challengeDoc.data()
+    const score = cdata.score
+
+    const usersSnap = await getDocs(collection(db, "users"))
+    for (const u of usersSnap.docs) {
+      const udata = u.data()
+      if (udata.solvedChallenges?.includes(id)) {
+        await updateDoc(doc(db, "users", u.id), {
+          score: (udata.score || 0) - score,
+          solvedChallenges: arrayRemove(id)
+        })
+
+        if (udata.teamId) {
+          const teamDoc = await (await getDocs(query(collection(db, "teams"), where("__name__", "==", udata.teamId)))).docs[0]
+          if (teamDoc) {
+            const tdata = teamDoc.data()
+            await updateDoc(doc(db, "teams", teamDoc.id), {
+              score: (tdata.score || 0) - score,
+              solvedChallenges: arrayRemove(id)
+            })
           }
         }
       }
-      await deleteDoc(doc(db, "challenges", id))
     }
-    setLoadingAction(false)
+
+    await deleteDoc(doc(db, "challenges", id))
   }
+  setLoadingAction(false)
+}
 
   const handlePublish = async (id) => {
     setLoadingAction(true)
