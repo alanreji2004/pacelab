@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom"
 import { useAuthState } from "react-firebase-hooks/auth"
 import AdminNavbar from "../AdminNavbar/AdminNavbar"
 import styles from "./AddChallenges.module.css"
-import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore"
+import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc, getDocs } from "firebase/firestore"
 import { sha256 } from "js-sha256"
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
@@ -79,9 +79,30 @@ export default function AddChallenges() {
     if (!editName || !editScore) return
     setLoadingAction(true)
     const docRef = doc(db, "challenges", editingId)
-    const payload = { name: editName.trim(), link: editLink.trim() || "", score: Number(editScore) }
+    const oldDoc = await (await getDocs(query(collection(db, "challenges"), where("__name__", "==", editingId)))).docs[0]
+    const oldData = oldDoc.data()
+    const oldScore = oldData.score
+    const newScore = Number(editScore)
+    const diff = newScore - oldScore
+    const payload = { name: editName.trim(), link: editLink.trim() || "", score: newScore }
     if (editFlag) payload.flagHash = sha256(editFlag.trim())
     await updateDoc(docRef, payload)
+    if (diff !== 0) {
+      const usersSnap = await getDocs(collection(db, "users"))
+      for (const u of usersSnap.docs) {
+        const udata = u.data()
+        if (udata.solvedChallenges?.includes(editingId)) {
+          await updateDoc(doc(db, "users", u.id), { score: (udata.score || 0) + diff })
+          if (udata.teamId) {
+            const teamDoc = await (await getDocs(query(collection(db, "teams"), where("__name__", "==", udata.teamId)))).docs[0]
+            if (teamDoc) {
+              const tdata = teamDoc.data()
+              await updateDoc(doc(db, "teams", teamDoc.id), { score: (tdata.score || 0) + diff })
+            }
+          }
+        }
+      }
+    }
     setEditModal(false)
     setEditingId(null)
     setLoadingAction(false)
@@ -89,7 +110,26 @@ export default function AddChallenges() {
 
   const handleDelete = async (id) => {
     setLoadingAction(true)
-    await deleteDoc(doc(db, "challenges", id))
+    const challengeDoc = await (await getDocs(query(collection(db, "challenges"), where("__name__", "==", id)))).docs[0]
+    if (challengeDoc) {
+      const cdata = challengeDoc.data()
+      const score = cdata.score
+      const usersSnap = await getDocs(collection(db, "users"))
+      for (const u of usersSnap.docs) {
+        const udata = u.data()
+        if (udata.solvedChallenges?.includes(id)) {
+          await updateDoc(doc(db, "users", u.id), { score: (udata.score || 0) - score })
+          if (udata.teamId) {
+            const teamDoc = await (await getDocs(query(collection(db, "teams"), where("__name__", "==", udata.teamId)))).docs[0]
+            if (teamDoc) {
+              const tdata = teamDoc.data()
+              await updateDoc(doc(db, "teams", teamDoc.id), { score: (tdata.score || 0) - score })
+            }
+          }
+        }
+      }
+      await deleteDoc(doc(db, "challenges", id))
+    }
     setLoadingAction(false)
   }
 
@@ -225,7 +265,6 @@ export default function AddChallenges() {
           </div>
         </div>
       </div>
-
       {bulkModalOpen && (
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
@@ -239,7 +278,6 @@ export default function AddChallenges() {
           </div>
         </div>
       )}
-
       {editModal && (
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
@@ -255,7 +293,6 @@ export default function AddChallenges() {
           </div>
         </div>
       )}
-
       {confirmUnpublishAllOpen && (
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
