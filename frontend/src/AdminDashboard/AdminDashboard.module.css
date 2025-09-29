@@ -40,21 +40,14 @@
 
 .panel {
   display: flex;
-  gap: 1.25rem;
   flex-direction: column;
-}
-
-@media (min-width: 900px) {
-  .panel {
-    flex-direction: row;
-  }
+  gap: 1.25rem;
 }
 
 .addSection,
 .listSection {
   background: var(--panel);
   border: 1px solid var(--accent);
-  border-radius: 12px;
   padding: 1rem;
   width: 100%;
 }
@@ -76,7 +69,6 @@
   border: 2px solid var(--accent);
   padding: 0.75rem;
   color: var(--accent);
-  border-radius: 8px;
   outline: none;
   font-size: 0.95rem;
 }
@@ -92,7 +84,6 @@
   color: #000;
   border: none;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
 }
@@ -102,7 +93,6 @@
   color: var(--accent);
   border: 2px solid var(--accent);
   padding: 0.6rem 0.9rem;
-  border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
 }
@@ -112,7 +102,6 @@
   border: 1px solid var(--muted);
   color: var(--muted);
   padding: 0.45rem 0.6rem;
-  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
 }
@@ -122,7 +111,6 @@
   border: 2px solid var(--danger);
   color: var(--danger);
   padding: 0.5rem 0.8rem;
-  border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
 }
@@ -149,7 +137,6 @@
   background: transparent;
   border: 1px solid var(--accent);
   padding: 0.85rem;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -169,7 +156,6 @@
 .cardScore {
   background: rgba(0,0,0,0.2);
   padding: 0.25rem 0.5rem;
-  border-radius: 6px;
   font-weight: 700;
 }
 
@@ -185,9 +171,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 70%;
-}
-
-.cardSolves {
 }
 
 .cardActions {
@@ -226,7 +209,6 @@
   background: var(--panel);
   border: 1px solid var(--accent);
   padding: 1rem;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -241,7 +223,6 @@
   min-height: 160px;
   resize: vertical;
   padding: 0.8rem;
-  border-radius: 8px;
   border: 2px solid var(--accent);
   background: transparent;
   color: var(--accent);

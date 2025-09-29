@@ -4,14 +4,13 @@ import { Navigate } from "react-router-dom"
 import { useAuthState } from "react-firebase-hooks/auth"
 import AdminNavbar from "../AdminNavbar/AdminNavbar"
 import styles from "./AdminDashboard.module.css"
-import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc, orderBy } from "firebase/firestore"
+import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore"
 import { sha256 } from "js-sha256"
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
 
 export default function AdminDashboard() {
   const [user, loading] = useAuthState(auth)
-  const [adding, setAdding] = useState(false)
   const [bulkModalOpen, setBulkModalOpen] = useState(false)
   const [confirmBulkError, setConfirmBulkError] = useState("")
   const [name, setName] = useState("")
@@ -28,7 +27,7 @@ export default function AdminDashboard() {
   const [editFlag, setEditFlag] = useState("")
   const [loadingAction, setLoadingAction] = useState(false)
   const [bulkText, setBulkText] = useState("")
-  const [confirmDeleteAllOpen, setConfirmDeleteAllOpen] = useState(false)
+  const [confirmUnpublishAllOpen, setConfirmUnpublishAllOpen] = useState(false)
 
   useEffect(() => {
     const addedQ = query(collection(db, "challenges"), where("status", "==", "added"))
@@ -134,12 +133,20 @@ export default function AdminDashboard() {
     setLoadingAction(false)
   }
 
-  const handleRemoveAllPublished = async () => {
+  const handlePublishAllAdded = async () => {
+    setLoadingAction(true)
+    for (const c of added) {
+      await updateDoc(doc(db, "challenges", c.id), { status: "published" })
+    }
+    setLoadingAction(false)
+  }
+
+  const handleUnpublishAllPublished = async () => {
     setLoadingAction(true)
     for (const c of published) {
-      await deleteDoc(doc(db, "challenges", c.id))
+      await updateDoc(doc(db, "challenges", c.id), { status: "added" })
     }
-    setConfirmDeleteAllOpen(false)
+    setConfirmUnpublishAllOpen(false)
     setLoadingAction(false)
   }
 
@@ -164,6 +171,9 @@ export default function AdminDashboard() {
           </div>
           <div className={styles.listSection}>
             <h2 className={styles.sectionTitle}>Added Challenges</h2>
+            <div className={styles.controlsRow}>
+              <button className={styles.secondaryButton} onClick={handlePublishAllAdded} disabled={loadingAction}>Publish All</button>
+            </div>
             <div className={styles.grid}>
               {added.length === 0 && <div className={styles.empty}>No added challenges</div>}
               {added.map(c => (
@@ -190,7 +200,7 @@ export default function AdminDashboard() {
           <div className={styles.listSection}>
             <h2 className={styles.sectionTitle}>Published Challenges</h2>
             <div className={styles.controlsRow}>
-              <button className={styles.secondaryButton} onClick={() => setConfirmDeleteAllOpen(true)} disabled={loadingAction}>Remove All</button>
+              <button className={styles.secondaryButton} onClick={() => setConfirmUnpublishAllOpen(true)} disabled={loadingAction}>Unpublish All</button>
             </div>
             <div className={styles.grid}>
               {published.length === 0 && <div className={styles.empty}>No published challenges</div>}
@@ -246,14 +256,14 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {confirmDeleteAllOpen && (
+      {confirmUnpublishAllOpen && (
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
-            <h3 className={styles.modalTitle}>Confirm Remove All Published</h3>
-            <div className={styles.confirmText}>This will delete all published challenges.</div>
+            <h3 className={styles.modalTitle}>Confirm Unpublish All</h3>
+            <div className={styles.confirmText}>This will move all published challenges back to added.</div>
             <div className={styles.modalRow}>
-              <button className={styles.dangerButton} onClick={handleRemoveAllPublished} disabled={loadingAction}>{loadingAction ? "Removing..." : "Remove All"}</button>
-              <button className={styles.secondaryButton} onClick={() => setConfirmDeleteAllOpen(false)}>Cancel</button>
+              <button className={styles.dangerButton} onClick={handleUnpublishAllPublished} disabled={loadingAction}>{loadingAction ? "Unpublishing..." : "Unpublish All"}</button>
+              <button className={styles.secondaryButton} onClick={() => setConfirmUnpublishAllOpen(false)}>Cancel</button>
             </div>
           </div>
         </div>
