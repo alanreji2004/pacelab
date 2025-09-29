@@ -5,6 +5,7 @@ import { collection, query, where, onSnapshot, doc, runTransaction, updateDoc, a
 import Navbar from "../Navbar/Navbar"
 import styles from "./Challenges.module.css"
 import { sha256 } from "js-sha256"
+import { useNavigate } from "react-router-dom"
 
 export default function Challenges() {
   const [user, loading] = useAuthState(auth)
@@ -16,6 +17,13 @@ export default function Challenges() {
   const [flagInput, setFlagInput] = useState("")
   const [error, setError] = useState("")
   const [loadingAction, setLoadingAction] = useState(false)
+  const navigate = useNavigate() 
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login") 
+    }
+  }, [user, loading, navigate])
 
   useEffect(() => {
     const q = query(collection(db, "challenges"), where("status", "==", "published"))
@@ -126,6 +134,7 @@ export default function Challenges() {
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Submit Flag</h3>
+            <p className={styles.warningText}>Beware of people around you when typing the flag!</p>
             <input className={styles.input} placeholder="Enter flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
             {error && <div className={styles.errorText}>{error}</div>}
             <div className={styles.modalRow}>
