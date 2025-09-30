@@ -25,6 +25,9 @@ export default function AdminDashboard() {
           <button className={styles.secondaryButton} onClick={() => navigate("/admin/view-teams")}>
             View Teams
           </button>
+          <button className={styles.secondaryButton} onClick={() => navigate("/leaderboard")}>
+            View Leaderboard
+          </button>
         </div>
       </div>
     </div>

@@ -16,63 +16,42 @@
 }
 
 .container {
-  margin-top: 7rem;
+  margin-top: 6rem;
   flex: 1;
-  display: flex;
-  padding: 2rem;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "team individual"
+    "graph graph";
+  gap: 1.5rem;
+  padding: 1rem;
 }
 
-.tableSection {
-  flex: 1;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.tableWrapper {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.graphSection {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.graphBox {
+.tableBox {
   background: rgba(0, 255, 255, 0.05);
   border: 1px solid rgba(0, 255, 255, 0.3);
   border-radius: 8px;
-  padding: 1rem;
-  height: 500px;
+  padding: 0.8rem;
+  width: 100%;
 }
 
-.title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.subtitle {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
+.tableWrapper {
+  overflow-x: auto;
 }
 
 .table {
   width: 100%;
+  min-width: 300px;
   border-collapse: collapse;
   color: #0ff;
+  font-size: clamp(0.8rem, 2vw, 1rem);
 }
 
 .table th,
 .table td {
   text-align: left;
-  padding: 0.8rem 1rem;
+  padding: 0.5rem;
   border-bottom: 1px solid rgba(0, 255, 255, 0.4);
 }
 
@@ -80,11 +59,40 @@
   border-bottom: 2px solid #0ff;
 }
 
-@media (max-width: 1200px) {
+.title {
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.graphBox {
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  width: 100%;
+  grid-area: graph;
+}
+
+.container > .tableBox:nth-child(1) {
+  grid-area: team;
+}
+
+.container > .tableBox:nth-child(2) {
+  grid-area: individual;
+}
+
+@media (max-width: 900px) {
   .container {
-    flex-direction: column;
-  }
-  .tableSection {
-    max-width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "team"
+      "individual"
+      "graph";
   }
 }

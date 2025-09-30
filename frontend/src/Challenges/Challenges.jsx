@@ -6,6 +6,8 @@ import Navbar from "../Navbar/Navbar"
 import styles from "./Challenges.module.css"
 import { sha256 } from "js-sha256"
 import { useNavigate } from "react-router-dom"
+import { serverTimestamp } from "firebase/firestore"
+
 
 export default function Challenges() {
   const [user, loading] = useAuthState(auth)
@@ -76,13 +78,15 @@ export default function Challenges() {
         const userRef = doc(db, "users", user.uid)
         transaction.update(userRef, {
           score: increment(challengeData.score),
-          solvedChallenges: arrayUnion(selectedChallenge.id)
+          solvedChallenges: arrayUnion(selectedChallenge.id),
+          lastSolvedAt: serverTimestamp()
         })
         if (team) {
           const teamRef = doc(db, "teams", team.id)
           transaction.update(teamRef, {
             score: increment(challengeData.score),
-            solvedChallenges: arrayUnion(selectedChallenge.id)
+            solvedChallenges: arrayUnion(selectedChallenge.id),
+            lastSolvedAt: serverTimestamp()
           })
         }
         transaction.update(challengeRef, {

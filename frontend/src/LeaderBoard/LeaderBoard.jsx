@@ -13,7 +13,10 @@ export default function LeaderBoard() {
   useEffect(() => {
     const unsubTeams = onSnapshot(collection(db, "teams"), snap => {
       const data = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      data.sort((a, b) => (b.score || 0) - (a.score || 0))
+      data.sort((a, b) => {
+        if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0)
+        return (a.lastUpdated?.toMillis?.() || 0) - (b.lastUpdated?.toMillis?.() || 0)
+      })
       setTeams(data.map((t, i) => ({ ...t, rank: i + 1 })))
       setTimeout(() => setAnimate(true), 300)
     })
@@ -21,7 +24,10 @@ export default function LeaderBoard() {
     const unsubUsers = onSnapshot(collection(db, "users"), snap => {
       const data = snap.docs.map(d => ({ id: d.id, ...d.data() }))
       const filtered = data.filter(u => (u.score || 0) > 0)
-      filtered.sort((a, b) => (b.score || 0) - (a.score || 0))
+      filtered.sort((a, b) => {
+        if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0)
+        return (a.lastSolvedAt?.toMillis?.() || 0) - (b.lastSolvedAt?.toMillis?.() || 0)
+      })
       setUsers(filtered.map((u, i) => ({ ...u, rank: i + 1 })).slice(0, 5))
     })
 
@@ -35,7 +41,7 @@ export default function LeaderBoard() {
     <div className={styles.outer}>
       <Navbar />
       <div className={styles.container}>
-        <div className={styles.tableSection}>
+        <div className={styles.tableBox}>
           <h1 className={styles.title}>Team Leaderboard</h1>
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -57,6 +63,8 @@ export default function LeaderBoard() {
               </tbody>
             </table>
           </div>
+        </div>
+        <div className={styles.tableBox}>
           <h1 className={styles.title}>Individual Leaderboard</h1>
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -79,18 +87,16 @@ export default function LeaderBoard() {
             </table>
           </div>
         </div>
-        <div className={styles.graphSection}>
-          <div className={styles.graphBox}>
-            <h2 className={styles.subtitle}>Score Comparison</h2>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={teams}>
-                <XAxis dataKey="name" stroke="#0ff" />
-                <YAxis stroke="#0ff" />
-                <Tooltip />
-                <Bar dataKey="score" fill="#0ff" isAnimationActive={animate} animationDuration={1500} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <div className={styles.graphBox}>
+          <h2 className={styles.subtitle}>Score Comparison</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={teams}>
+              <XAxis dataKey="name" stroke="#0ff" />
+              <YAxis stroke="#0ff" />
+              <Tooltip />
+              <Bar dataKey="score" fill="#0ff" isAnimationActive={animate} animationDuration={1500} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
