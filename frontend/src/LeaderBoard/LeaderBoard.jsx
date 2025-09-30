@@ -3,7 +3,7 @@ import { collection, onSnapshot } from "firebase/firestore"
 import { db } from "../firebase"
 import Navbar from "../Navbar/Navbar"
 import styles from "./LeaderBoard.module.css"
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts"
 import ToastContainer from "../Toast/ToastContainer"
 
 export default function LeaderBoard() {
@@ -92,14 +92,16 @@ export default function LeaderBoard() {
         </div>
         <div className={styles.graphBox}>
           <h2 className={styles.subtitle}>Score Comparison</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={teams}>
-              <XAxis dataKey="name" stroke="#0ff" />
-              <YAxis stroke="#0ff" />
-              <Tooltip />
-              <Bar dataKey="score" fill="#0ff" isAnimationActive={animate} animationDuration={1500} />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className={styles.graphScroll}>
+            <div className={styles.graphInner} style={{ width: `${teams.length * 120}px` }}>
+              <BarChart width={teams.length * 120} height={300} data={teams}>
+                <XAxis dataKey="name" stroke="#0ff" />
+                <YAxis stroke="#0ff" />
+                <Tooltip />
+                <Bar dataKey="score" fill="#0ff" isAnimationActive={animate} animationDuration={1500} />
+              </BarChart>
+            </div>
+          </div>
         </div>
       </div>
       <ToastContainer />

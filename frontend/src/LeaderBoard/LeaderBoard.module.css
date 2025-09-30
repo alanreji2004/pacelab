@@ -99,6 +99,18 @@
   padding: 1rem;
   width: 100%;
   grid-area: graph;
+  overflow: hidden;
+}
+
+.graphScroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+}
+
+.graphInner {
+  min-width: 100%;
+  display: inline-block;
 }
 
 .container > .tableBox:nth-child(1) {
@@ -141,5 +153,8 @@
   }
   .tableBox {
     max-height: 300px;
+  }
+  .graphInner {
+    min-width: 600px;
   }
 }
