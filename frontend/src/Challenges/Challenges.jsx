@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react"
 import { db, auth } from "../firebase"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { collection, query, where, onSnapshot, doc, runTransaction, updateDoc, arrayUnion, increment } from "firebase/firestore"
+import { collection, query, where, onSnapshot, doc, runTransaction, updateDoc, arrayUnion, increment,addDoc } from "firebase/firestore"
 import Navbar from "../Navbar/Navbar"
 import styles from "./Challenges.module.css"
 import { sha256 } from "js-sha256"
 import { useNavigate } from "react-router-dom"
 import { serverTimestamp } from "firebase/firestore"
+import ToastContainer from "../Toast/ToastContainer"
 
 
 export default function Challenges() {
@@ -92,6 +93,11 @@ export default function Challenges() {
         transaction.update(challengeRef, {
           solves: increment(1)
         })
+      const toastRef = doc(collection(db, "toasts"))
+      transaction.set(toastRef, {
+        message: `${team ? team.name : userData.email} +${challengeData.score}pts`,
+        createdAt: serverTimestamp()
+      })
       })
       setModalOpen(false)
     } catch (err) {
@@ -157,6 +163,7 @@ export default function Challenges() {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   )
 }

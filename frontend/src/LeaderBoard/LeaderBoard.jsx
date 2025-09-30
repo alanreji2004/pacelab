@@ -4,6 +4,7 @@ import { db } from "../firebase"
 import Navbar from "../Navbar/Navbar"
 import styles from "./LeaderBoard.module.css"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
+import ToastContainer from "../Toast/ToastContainer"
 
 export default function LeaderBoard() {
   const [teams, setTeams] = useState([])
@@ -101,6 +102,7 @@ export default function LeaderBoard() {
           </ResponsiveContainer>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom"
 import { collection, doc, getDoc, onSnapshot } from "firebase/firestore"
 import AdminNavbar from "../AdminNavbar/AdminNavbar"
 import styles from "./ViewTeams.module.css"
+import ToastContainer from "../Toast/ToastContainer"
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
 
@@ -92,6 +93,7 @@ export default function ViewTeams() {
           </table>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

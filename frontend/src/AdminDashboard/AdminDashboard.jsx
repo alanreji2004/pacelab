@@ -3,6 +3,7 @@ import { auth } from "../firebase"
 import { Navigate, useNavigate } from "react-router-dom"
 import AdminNavbar from "../AdminNavbar/AdminNavbar"
 import styles from "./AdminDashboard.module.css"
+import  ToastContainer from "../Toast/ToastContainer"
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
 
@@ -30,6 +31,7 @@ export default function AdminDashboard() {
           </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

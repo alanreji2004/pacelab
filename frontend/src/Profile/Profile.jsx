@@ -20,6 +20,7 @@ import {
     query,
     where
 } from "firebase/firestore"
+import ToastContainer from "../Toast/ToastContainer"
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
 
 export default function Profile() {
@@ -450,8 +451,8 @@ export default function Profile() {
         </div>
     </div>
     )}
-
-        </div>
+    <ToastContainer />
+    </div>
     )
     }
 
