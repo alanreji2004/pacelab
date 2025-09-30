@@ -5,7 +5,7 @@ import { collection, query, where, onSnapshot, doc, runTransaction, updateDoc, a
 import Navbar from "../Navbar/Navbar"
 import styles from "./Challenges.module.css"
 import { sha256 } from "js-sha256"
-import { useNavigate } from "react-router-dom"
+import { useNavigate,Link } from "react-router-dom"
 import { serverTimestamp } from "firebase/firestore"
 import ToastContainer from "../Toast/ToastContainer"
 
@@ -123,7 +123,7 @@ export default function Challenges() {
           {challenges.map(c => (
             <div key={c.id} className={styles.card}>
               <div className={styles.cardHeader}>
-                <div className={styles.cardTitle}>{c.name}</div>
+                <Link to={c.link}><div className={styles.cardTitle}>{c.name}</div></Link>
                 <div className={styles.cardScore}>{c.score}</div>
               </div>
               <div className={styles.cardBody}>
