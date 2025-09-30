@@ -10,9 +10,11 @@ export default function LeaderBoard() {
   const [users, setUsers] = useState([])
   const [animate, setAnimate] = useState(false)
 
+  const adminEmails = ["admin@pacelabtest.com", "admin@pacelabctf.com"]
+
   useEffect(() => {
     const unsubTeams = onSnapshot(collection(db, "teams"), snap => {
-      const data = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      let data = snap.docs.map(d => ({ id: d.id, ...d.data() }))
       data.sort((a, b) => {
         if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0)
         return (a.lastUpdated?.toMillis?.() || 0) - (b.lastUpdated?.toMillis?.() || 0)
@@ -22,13 +24,13 @@ export default function LeaderBoard() {
     })
 
     const unsubUsers = onSnapshot(collection(db, "users"), snap => {
-      const data = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      const filtered = data.filter(u => (u.score || 0) > 0)
-      filtered.sort((a, b) => {
+      let data = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      data = data.filter(u => !adminEmails.includes(u.email))
+      data.sort((a, b) => {
         if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0)
         return (a.lastSolvedAt?.toMillis?.() || 0) - (b.lastSolvedAt?.toMillis?.() || 0)
       })
-      setUsers(filtered.map((u, i) => ({ ...u, rank: i + 1 })).slice(0, 5))
+      setUsers(data.map((u, i) => ({ ...u, rank: i + 1 })))
     })
 
     return () => {
@@ -89,7 +91,7 @@ export default function LeaderBoard() {
         </div>
         <div className={styles.graphBox}>
           <h2 className={styles.subtitle}>Score Comparison</h2>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer width="100%" height={300}>
             <BarChart data={teams}>
               <XAxis dataKey="name" stroke="#0ff" />
               <YAxis stroke="#0ff" />
