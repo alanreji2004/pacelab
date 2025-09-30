@@ -17,7 +17,7 @@ export default function LeaderBoard() {
       let data = snap.docs.map(d => ({ id: d.id, ...d.data() }))
       data.sort((a, b) => {
         if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0)
-        return (a.lastUpdated?.toMillis?.() || 0) - (b.lastUpdated?.toMillis?.() || 0)
+        return (a.lastUpdated?.toMillis?.() || a.createdAt?.toMillis?.() || 0) - (b.lastUpdated?.toMillis?.() || b.createdAt?.toMillis?.() || 0)
       })
       setTeams(data.map((t, i) => ({ ...t, rank: i + 1 })))
       setTimeout(() => setAnimate(true), 300)
@@ -28,7 +28,7 @@ export default function LeaderBoard() {
       data = data.filter(u => !adminEmails.includes(u.email))
       data.sort((a, b) => {
         if ((b.score || 0) !== (a.score || 0)) return (b.score || 0) - (a.score || 0)
-        return (a.lastSolvedAt?.toMillis?.() || 0) - (b.lastSolvedAt?.toMillis?.() || 0)
+        return (a.lastSolvedAt?.toMillis?.() || a.createdAt?.toMillis?.() || 0) - (b.lastSolvedAt?.toMillis?.() || b.createdAt?.toMillis?.() || 0)
       })
       setUsers(data.map((u, i) => ({ ...u, rank: i + 1 })))
     })
