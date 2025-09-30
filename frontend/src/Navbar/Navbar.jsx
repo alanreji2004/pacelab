@@ -52,7 +52,7 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar} role="navigation" aria-label="Main navigation">
       <div className={styles.navLogo}>
-        <img src={pacelablogo} alt="PaceLab Logo" />
+        <Link to="/"><img src={pacelablogo} alt="PaceLab Logo" /></Link>
       </div>
 
       <ul className={styles.navLinks}>
