@@ -31,7 +31,6 @@
 .tableBox {
   background: rgba(0, 255, 255, 0.05);
   border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 8px;
   padding: 1rem;
   width: 100%;
   max-height: 400px;
@@ -97,7 +96,6 @@
 .graphBox {
   background: rgba(0, 255, 255, 0.05);
   border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 8px;
   padding: 1rem;
   width: 100%;
   grid-area: graph;
