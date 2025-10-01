@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
-import { collection, onSnapshot, query, orderBy, where, serverTimestamp } from "firebase/firestore"
+import { useState, useEffect } from "react"
 import { db } from "../firebase"
+import { collection, query, orderBy, where, onSnapshot } from "firebase/firestore"
 import Toast from "./Toast"
 import styles from "./Toast.module.css"
 
@@ -9,13 +9,11 @@ export default function ToastContainer() {
 
   useEffect(() => {
     const now = new Date()
-
     const q = query(
       collection(db, "toasts"),
       where("createdAt", ">", now),
       orderBy("createdAt", "asc")
     )
-
     const unsub = onSnapshot(q, snap => {
       snap.docChanges().forEach(change => {
         if (change.type === "added") {
@@ -27,7 +25,6 @@ export default function ToastContainer() {
         }
       })
     })
-
     return () => unsub()
   }, [])
 
@@ -36,7 +33,7 @@ export default function ToastContainer() {
       {toasts.map(t => (
         <Toast
           key={t.id}
-          message={t.message}
+          message={`${t.username} ${t.message}`}
           onClose={() =>
             setToasts(prev => prev.filter(toast => toast.id !== t.id))
           }
