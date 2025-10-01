@@ -13,6 +13,7 @@ import AddChallenges from "./AddChallenges/AddChallenges"
 import Challenges from "./Challenges/Challenges"
 import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import ViewTeams from "./ViewTeams/ViewTeams" 
+import ViewIndividual from "./ViewIndividual/ViewIndividual"
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,8 @@ const router = createBrowserRouter([
       { path: "/admin/add-challenge", element: <AddChallenges /> },
       { path: "/challenges", element: <Challenges/> },
       { path: "/leaderboard", element: <LeaderBoard /> },
-      { path: "/admin/view-teams", element: <ViewTeams /> }
+      { path: "/admin/view-teams", element: <ViewTeams /> },
+      { path: "/admin/view-individuals", element: <ViewIndividual /> }
     ],
   },
 ])
