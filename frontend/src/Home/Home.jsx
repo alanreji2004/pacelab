@@ -12,9 +12,9 @@ return (
         <div className={styles.gridPlane}></div>
 
         <div className={styles.content}>
-            <h1 className={styles.heading} data-text="CAPTURE THE FLAG">
-                <span className={styles.titleMain}>CAPTURE</span>
-                <span className={styles.titleMain}>THE FLAG</span>
+            <h1 className={styles.heading} data-text="Decode The Alien Threat">
+                <span className={styles.titleMain}>Decode The</span>
+                <span className={styles.titleMain}>Alien Threat</span>
             </h1>
             <div className={styles.buttons}>
                 <Link to="/profile" className={`${styles.btn} ${styles.btn1}`}>

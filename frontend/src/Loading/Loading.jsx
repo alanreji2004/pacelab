@@ -20,7 +20,7 @@ export default function Loading() {
     return (
       <div className={styles.loaderWrapper}>
         <div className={styles.loader}></div>
-        <p className={styles.text}>Initializing exploits... Stand by.</p>
+        <p className={styles.text}>Decoding Cosmic Transmission...Stand by.</p>
       </div>
     )
   }
