@@ -6,6 +6,8 @@ import { auth, db } from "../firebase"
 import { doc, onSnapshot, collection, query, where, getDocs } from "firebase/firestore"
 import ToastContainer from "../Toast/ToastContainer"
 
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
+
 export default function Profile() {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
@@ -82,24 +84,32 @@ export default function Profile() {
           <div className={styles.centerBox}>
             <p className={styles.lead}>{userData.username || user.email}</p>
             <p className={styles.subLead}>{user.email}</p>
-            <div className={styles.teamBox}>
-              <div className={styles.teamHeader}>
-                <h2 className={styles.teamName}>Score: {userData.score || 0}</h2>
+            {user.email === ADMIN_EMAIL ? (
+              <div className={styles.actions}>
+                <button className={styles.cta} onClick={() => navigate("/admin/dashboard")}>
+                  View Dashboard
+                </button>
               </div>
-              <div className={styles.membersList}>
-                <div className={styles.memberHeader}>
-                  <span>Challenge</span>
-                  <span>Points</span>
+            ) : (
+              <div className={styles.teamBox}>
+                <div className={styles.teamHeader}>
+                  <h2 className={styles.teamName}>Score: {userData.score || 0}</h2>
                 </div>
-                {solvedList.length === 0 && <p className={styles.lead}>No challenges solved yet</p>}
-                {solvedList.map(c => (
-                  <div key={c.id} className={styles.memberRow}>
-                    <div className={styles.memberName}>{c.name}</div>
-                    <div className={styles.memberScore}>{c.score}</div>
+                <div className={styles.membersList}>
+                  <div className={styles.memberHeader}>
+                    <span>Challenge</span>
+                    <span>Points</span>
                   </div>
-                ))}
+                  {solvedList.length === 0 && <p className={styles.lead}>No challenges solved yet</p>}
+                  {solvedList.map(c => (
+                    <div key={c.id} className={styles.memberRow}>
+                      <div className={styles.memberName}>{c.name}</div>
+                      <div className={styles.memberScore}>{c.score}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             {errorMsg && <p className={styles.error}>{errorMsg}</p>}
             {infoMsg && <p className={styles.info}>{infoMsg}</p>}
           </div>
