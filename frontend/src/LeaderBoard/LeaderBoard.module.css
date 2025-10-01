@@ -19,11 +19,11 @@
   margin-top: 6rem;
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: auto auto;
   grid-template-areas:
-    "team individual"
-    "graph graph";
+    "individual"
+    "graph";
   gap: 1.5rem;
   padding: 1rem;
 }
@@ -113,11 +113,7 @@
   display: inline-block;
 }
 
-.container > .tableBox:nth-child(1) {
-  grid-area: team;
-}
-
-.container > .tableBox:nth-child(2) {
+.container > .tableBox {
   grid-area: individual;
 }
 
@@ -125,7 +121,6 @@
   .container {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "team"
       "individual"
       "graph";
   }

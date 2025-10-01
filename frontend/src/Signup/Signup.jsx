@@ -27,7 +27,6 @@ export default function Signup() {
       await setDoc(doc(db, "users", user.uid), {
         username,
         email,
-        teamId: null,
         score: 0,
         solvedChallenges: [],
         createdAt: new Date()

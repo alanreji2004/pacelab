@@ -1,30 +1,28 @@
 import { useState, useEffect } from "react"
 import { db, auth } from "../firebase"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { collection, query, where, onSnapshot, doc, runTransaction, updateDoc, arrayUnion, increment,addDoc } from "firebase/firestore"
+import { collection, query, where, onSnapshot, doc, runTransaction, arrayUnion, increment } from "firebase/firestore"
 import Navbar from "../Navbar/Navbar"
 import styles from "./Challenges.module.css"
 import { sha256 } from "js-sha256"
-import { useNavigate,Link } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { serverTimestamp } from "firebase/firestore"
 import ToastContainer from "../Toast/ToastContainer"
-
 
 export default function Challenges() {
   const [user, loading] = useAuthState(auth)
   const [challenges, setChallenges] = useState([])
-  const [team, setTeam] = useState(null)
   const [userData, setUserData] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedChallenge, setSelectedChallenge] = useState(null)
   const [flagInput, setFlagInput] = useState("")
   const [error, setError] = useState("")
   const [loadingAction, setLoadingAction] = useState(false)
-  const navigate = useNavigate() 
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate("/login") 
+      navigate("/login")
     }
   }, [user, loading, navigate])
 
@@ -41,12 +39,6 @@ export default function Challenges() {
     const unsubUser = onSnapshot(doc(db, "users", user.uid), d => {
       if (d.exists()) {
         setUserData({ id: d.id, ...d.data() })
-        if (d.data().teamId) {
-          const unsubTeam = onSnapshot(doc(db, "teams", d.data().teamId), td => {
-            if (td.exists()) setTeam({ id: td.id, ...td.data() })
-          })
-          return () => unsubTeam()
-        }
       }
     })
     return () => unsubUser()
@@ -75,29 +67,21 @@ export default function Challenges() {
         const challengeData = challengeDoc.data()
         if (challengeData.flagHash !== flagHash) throw new Error("Incorrect flag")
         if (userData.solvedChallenges?.includes(selectedChallenge.id)) throw new Error("Already solved")
-        if (team?.solvedChallenges?.includes(selectedChallenge.id)) throw new Error("Already solved by team")
         const userRef = doc(db, "users", user.uid)
         transaction.update(userRef, {
           score: increment(challengeData.score),
           solvedChallenges: arrayUnion(selectedChallenge.id),
           lastSolvedAt: serverTimestamp()
         })
-        if (team) {
-          const teamRef = doc(db, "teams", team.id)
-          transaction.update(teamRef, {
-            score: increment(challengeData.score),
-            solvedChallenges: arrayUnion(selectedChallenge.id),
-            lastSolvedAt: serverTimestamp()
-          })
-        }
         transaction.update(challengeRef, {
           solves: increment(1)
         })
-      const toastRef = doc(collection(db, "toasts"))
-      transaction.set(toastRef, {
-        message: `${team ? team.name : userData.email} +${challengeData.score}pts`,
-        createdAt: serverTimestamp()
-      })
+        const toastRef = doc(collection(db, "toasts"))
+        transaction.set(toastRef, {
+          username: userData.username || userData.email,
+          message: `+${challengeData.score}pts`,
+          createdAt: serverTimestamp()
+        })
       })
       setModalOpen(false)
     } catch (err) {
@@ -109,7 +93,6 @@ export default function Challenges() {
   const hasSolved = c => {
     if (!userData) return false
     if (userData.solvedChallenges?.includes(c.id)) return true
-    if (team?.solvedChallenges?.includes(c.id)) return true
     return false
   }
 
@@ -130,15 +113,14 @@ export default function Challenges() {
                 <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
               </div>
               <div className={styles.cardActions}>
-                  {c.link && (
-                    <button 
-                    className={styles.viewButton} 
+                {c.link && (
+                  <button
+                    className={styles.viewButton}
                     onClick={() => window.open(c.link, "_blank")}
-                    >
+                  >
                     View Challenge
-                    </button>
+                  </button>
                 )}
-
                 {hasSolved(c) ? (
                   <div className={styles.solvedText}>Solved</div>
                 ) : (

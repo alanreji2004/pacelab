@@ -23,8 +23,8 @@ export default function AdminDashboard() {
           <button className={styles.primaryButton} onClick={() => navigate("/admin/add-challenge")}>
             Add Challenges
           </button>
-          <button className={styles.secondaryButton} onClick={() => navigate("/admin/view-teams")}>
-            View Teams
+          <button className={styles.secondaryButton} onClick={() => navigate("/admin/view-individuals")}>
+            View Individuals
           </button>
           <button className={styles.secondaryButton} onClick={() => navigate("/leaderboard")}>
             View Leaderboard
