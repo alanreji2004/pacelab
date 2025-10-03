@@ -89,8 +89,8 @@ const Navbar = () => {
       >
         <ul>
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
-          <li><Link to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</Link></li>
-          <li><Link to="/leaderboard" onClick={() => setMenuOpen(false)}>Leaderboard</Link></li>
+          <li><Link to="/challenges" onClick={() => setMenuOpen(false)}>Signal Puzzles</Link></li>
+          <li><Link to="/leaderboard" onClick={() => setMenuOpen(false)}>Mission Rankings</Link></li>
           <li>
             {username ? (
               <button className={styles.registerButton} onClick={() => { setMenuOpen(false); navigate('/profile'); }}>{username}</button>
