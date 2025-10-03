@@ -14,6 +14,8 @@ export default function Signup() {
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const [phone, setPhone] = useState("")
+
 
   const handleSignup = async (e) => {
     e.preventDefault()
@@ -27,6 +29,7 @@ export default function Signup() {
       await setDoc(doc(db, "users", user.uid), {
         username,
         email,
+        phone,
         score: 0,
         solvedChallenges: [],
         createdAt: new Date()
@@ -67,6 +70,13 @@ export default function Signup() {
           className={styles.input}
           required
         />
+        <input type="tel"
+         placeholder="Phone Number"
+         value={phone}
+         onChange={(e) => setPhone(e.target.value)}
+         className={styles.input}
+         required
+       />
         <div className={styles.passwordWrapper}>
           <input
             type={showPassword ? "text" : "password"}

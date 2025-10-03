@@ -54,6 +54,7 @@ export default function ViewIndividual() {
                 <th>Rank</th>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>Challenge</th>
                 <th>Score</th>
                 <th>Total Score</th>
@@ -66,6 +67,7 @@ export default function ViewIndividual() {
                     <td rowSpan={u.solved.length || 1}>{u.rank}</td>
                     <td rowSpan={u.solved.length || 1}>{u.username || "Unnamed"}</td>
                     <td rowSpan={u.solved.length || 1}>{u.email}</td>
+                    <td rowSpan={u.solved.length || 1}>{u.phone || "-"}</td>
                     {u.solved.length > 0 ? (
                       <>
                         <td>{u.solved[0].name}</td>
