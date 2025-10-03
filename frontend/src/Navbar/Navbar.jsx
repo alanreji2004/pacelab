@@ -57,8 +57,8 @@ const Navbar = () => {
 
       <ul className={styles.navLinks}>
         <li><Link to="/about">About</Link></li>
-        <li><Link to="/challenges">Challenges</Link></li>
-        <li><Link to="/leaderboard">Leaderboard</Link></li>
+        <li><Link to="/challenges">Signal Puzzles</Link></li>
+        <li><Link to="/leaderboard">Mission Rankings</Link></li>
       </ul>
 
       {username ? (

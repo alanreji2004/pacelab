@@ -100,9 +100,9 @@ export default function Challenges() {
     <div className={styles.page}>
       <Navbar />
       <div className={styles.container}>
-        <h1 className={styles.heading}>Challenges</h1>
+        <h1 className={styles.heading}>Signal Puzzles</h1>
         <div className={styles.grid}>
-          {challenges.length === 0 && <div className={styles.empty}>No published challenges</div>}
+          {challenges.length === 0 && <div className={styles.empty}>No published puzzles</div>}
           {challenges.map(c => (
             <div key={c.id} className={styles.card}>
               <div className={styles.cardHeader}>
@@ -118,13 +118,13 @@ export default function Challenges() {
                     className={styles.viewButton}
                     onClick={() => window.open(c.link, "_blank")}
                   >
-                    View Challenge
+                    View Puzzle
                   </button>
                 )}
                 {hasSolved(c) ? (
                   <div className={styles.solvedText}>Solved</div>
                 ) : (
-                  <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>Submit Flag</button>
+                  <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>Send Decryption</button>
                 )}
               </div>
             </div>
@@ -135,11 +135,11 @@ export default function Challenges() {
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Submit Flag</h3>
-            <p className={styles.warningText}>Beware of people around you when typing the flag!</p>
-            <input className={styles.input} placeholder="Enter flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
+            <p className={styles.warningText}>Ensure no enemy surveillance when transmitting the code.</p>
+            <input className={styles.input} placeholder="Enter Decryption" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
             {error && <div className={styles.errorText}>{error}</div>}
             <div className={styles.modalRow}>
-              <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Submit"}</button>
+              <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Send"}</button>
               <button className={styles.secondaryButton} onClick={() => setModalOpen(false)}>Cancel</button>
             </div>
           </div>

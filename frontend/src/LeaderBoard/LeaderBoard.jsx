@@ -31,7 +31,7 @@ export default function LeaderBoard() {
       <Navbar />
       <div className={styles.container}>
         <div className={styles.tableBox}>
-          <h1 className={styles.title}>Individual Leaderboard</h1>
+          <h1 className={styles.title}>Individual Rankings</h1>
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
               <thead>
