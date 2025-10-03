@@ -26,6 +26,12 @@ export default function Profile() {
   }
 
   useEffect(() => {
+    if (user?.email && ADMIN_EMAIL && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+      navigate("/admin/dashboard")
+    }
+  }, [user, navigate])
+
+  useEffect(() => {
     const unsub = auth.onAuthStateChanged(u => setUser(u))
     return () => unsub()
   }, [])
