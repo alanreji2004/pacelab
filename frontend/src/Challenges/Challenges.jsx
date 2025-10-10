@@ -136,7 +136,7 @@ export default function Challenges() {
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Submit Flag</h3>
             <p className={styles.warningText}>Ensure no enemy surveillance when transmitting the code.</p>
-            <input className={styles.input} placeholder="Enter Decryption" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
+            <input className={styles.input} placeholder="blackout{Enter_Your_Flag}" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
             {error && <div className={styles.errorText}>{error}</div>}
             <div className={styles.modalRow}>
               <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Send"}</button>
