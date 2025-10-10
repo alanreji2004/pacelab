@@ -466,7 +466,7 @@
         height: auto;
     }
     .content {
-        margin-top: 10rem;
+        margin-top: 13rem;
         margin: 6.5rem auto 0;
         margin-left: auto;
         margin-right: auto;
@@ -561,6 +561,7 @@
         font-size: 2.4rem;
         line-height: 1.05;
         margin-bottom: 0.9rem;
+        margin-top: 4rem;
     }
     .titleMain {
         display: block;
