@@ -2,9 +2,9 @@
 
 :root {
   --bg: #010408;
-  --accent: #0ff;
+  --accent: rgb(168, 242, 166);
   --panel: rgba(0,0,0,0.4);
-  --muted: #7ef0f0;
+  --muted: #9ca89e;
   --danger: #ff4d4d;
 }
 html, body {
@@ -15,7 +15,7 @@ html, body {
 
 * {
   box-sizing: border-box;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   color: var(--accent);
 }
 
@@ -108,7 +108,7 @@ html, body {
   border: none;
   padding: 0.6rem 1rem;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 900;
 }
 
 .secondaryButton {
@@ -199,11 +199,12 @@ html, body {
 
 .viewButton {
   background-color: #444;
-  color: #0ff;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 0.6rem 1rem;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 800;
   transition: background 0.2s ease-in-out;
 }
 

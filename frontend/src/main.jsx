@@ -14,6 +14,7 @@ import Challenges from "./Challenges/Challenges"
 import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import ViewTeams from "./ViewTeams/ViewTeams" 
 import ViewIndividual from "./ViewIndividual/ViewIndividual"
+import HowItWorks from "./HowItWorks/HowItWorks"
 
 const router = createBrowserRouter([
   {
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
       { path: "/challenges", element: <Challenges/> },
       { path: "/leaderboard", element: <LeaderBoard /> },
       { path: "/admin/view-teams", element: <ViewTeams /> },
-      { path: "/admin/view-individuals", element: <ViewIndividual /> }
+      { path: "/admin/view-individuals", element: <ViewIndividual /> },
+      { path: "/howitworks", element: <HowItWorks /> }
     ],
   },
 ])

@@ -13,7 +13,7 @@
 .loader {
   width: 40px;
   height: 20px;
-  --c:no-repeat radial-gradient(farthest-side,#0ff 93%,#0000);
+  --c:no-repeat radial-gradient(farthest-side,rgb(168, 242, 166) 93%,#0000);
   background:
     var(--c) 0    0,
     var(--c) 50%  0;
@@ -27,7 +27,7 @@
   position: absolute;
   width: 8px;
   height: 12px;
-  background: #0ff;
+  background: rgb(168, 242, 166);
   left: -16px;
   top: 0;
   animation: 
@@ -41,7 +41,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #0ff; 
+  background: rgb(168, 242, 166); 
   animation: l6-3 1.5s linear infinite;
 }
 @keyframes l6-0 {
@@ -65,9 +65,9 @@
 }
 
 .text {
-  color: #0ff;
+  color: rgb(168, 242, 166);
   margin-top: 16px;
   font-size: 1.2rem;
-  font-family: "Orbitron", sans-serif;
+  font-family: "Montserrat", sans-serif;
   text-align: center;
 }

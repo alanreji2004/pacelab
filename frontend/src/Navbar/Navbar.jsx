@@ -57,8 +57,8 @@ const Navbar = () => {
 
       <ul className={styles.navLinks}>
         <li><Link to="/about">About</Link></li>
-        <li><Link to="/challenges">Signal Puzzles</Link></li>
-        <li><Link to="/leaderboard">Mission Rankings</Link></li>
+        <li><Link to="/challenges">Challenges</Link></li>
+        <li><Link to="/leaderboard">LeaderBoard</Link></li>
       </ul>
 
       {username ? (
@@ -89,8 +89,8 @@ const Navbar = () => {
       >
         <ul>
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
-          <li><Link to="/challenges" onClick={() => setMenuOpen(false)}>Signal Puzzles</Link></li>
-          <li><Link to="/leaderboard" onClick={() => setMenuOpen(false)}>Mission Rankings</Link></li>
+          <li><Link to="/challenges" onClick={() => setMenuOpen(false)}>Challenges</Link></li>
+          <li><Link to="/leaderboard" onClick={() => setMenuOpen(false)}>LeaderBoard</Link></li>
           <li>
             {username ? (
               <button className={styles.registerButton} onClick={() => { setMenuOpen(false); navigate('/profile'); }}>{username}</button>

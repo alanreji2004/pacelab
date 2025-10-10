@@ -1,3 +1,4 @@
+import Footer from "../Footer/Footer"
 import Navbar from "../Navbar/Navbar"
 import styles from "./About.module.css"
 
@@ -6,14 +7,32 @@ const About = () => {
     <div className={styles.perspectiveContainer}>
       <Navbar />
       <div className={styles.content}>
+        <h1 className={styles.title}>WHAT IS BLACKOUT: CTF?</h1>
         <p>
-          CTFs, or Capture The Flag competitions, are a central pillar of PaceLab's mission to foster cybersecurity expertise and practical skills. These challenges are meticulously designed to simulate real-world security scenarios, ranging from cryptography and forensics to web exploitation and reverse engineering. They serve as an invaluable training ground, allowing participants—be they students, enthusiasts, or seasoned professionals—to apply theoretical knowledge in a dynamic and competitive environment. Beyond the technical challenge, PaceLab's CTFs promote teamwork, critical thinking, and rapid problem-solving, encouraging participants to think like both attackers and defenders. By successfully overcoming these diverse security puzzles, participants not only solidify their technical understanding but also gain the confidence and hands-on experience crucial for a successful career in cybersecurity.
-        </p>
-
+          BLACKOUT isn’t your typical CTF — it’s a story-driven digital mystery where each level unravels a piece of a hidden narrative. Hosted by Pace Lab, this experience blends interactive puzzles, hidden codes, cryptic clues, and web-based challenges that test your curiosity and problem-solving skills.
+        </p><br />
         <p>
-          PaceLab's commitment extends beyond simply hosting a competition; we strive to create an inclusive and high-quality educational experience. Our CTFs feature a constantly updated and diverse array of challenges, ensuring that every event offers fresh learning opportunities and remains relevant to the evolving threat landscape. We emphasize fair play and provide comprehensive, constructive post-CTF write-ups and solutions, transforming the competition into a valuable self-assessment and learning tool. By regularly conducting these rigorous and engaging challenges, PaceLab actively contributes to developing a robust community of skilled cybersecurity practitioners, ready to tackle the security challenges of tomorrow.
+          Every stage takes you deeper into the unknown — decoding transmissions, uncovering secrets, and piecing together the truth behind the blackout.
         </p>
+        <p>
+          This isn’t about speed — it’s about insight, persistence, and discovery. Welcome to BLACKOUT. The question is — how far can you go before the lights fade completely?
+        </p>
+        <div className={styles.cards}>
+          <div className={styles.card}>
+            <h3>⚙ Real Challenges</h3>
+            <p>Industry-grade problems crafted by cybersecurity experts.</p>
+          </div>
+          <div className={styles.card}>
+            <h3>🕓 Online Format</h3>
+            <p>Continuous online competition.</p>
+          </div>
+          <div className={styles.card}>
+            <h3>🧍‍♂ Solo Competition</h3>
+            <p>Individual participation — your skill decides your rank.</p>
+          </div>
+        </div>
       </div>
+      <Footer />
     </div>
   )
 }

@@ -118,13 +118,13 @@ export default function Challenges() {
                     className={styles.viewButton}
                     onClick={() => window.open(c.link, "_blank")}
                   >
-                    View Puzzle
+                    View Challenge
                   </button>
                 )}
                 {hasSolved(c) ? (
                   <div className={styles.solvedText}>Solved</div>
                 ) : (
-                  <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>Send Decryption</button>
+                  <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>Submit Flag</button>
                 )}
               </div>
             </div>

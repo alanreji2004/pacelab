@@ -12,9 +12,9 @@ return (
         <div className={styles.gridPlane}></div>
 
         <div className={styles.content}>
-            <h1 className={styles.heading} data-text="Decode The Alien Threat">
-                <span className={styles.titleMain}>Decode The</span>
-                <span className={styles.titleMain}>Alien Threat</span>
+            <h1 className={styles.heading} data-text="Blackout CTF">
+                <span className={styles.titleMain}>Blackout</span>
+                <span className={styles.titleMain}>CTF</span>
             </h1>
             <div className={styles.buttons}>
                 <Link to="/profile" className={`${styles.btn} ${styles.btn1}`}>
@@ -24,7 +24,7 @@ return (
                     JOIN
                 </Link>
 
-                <a href="#how-it-works" className={`${styles.btn} ${styles.btn1}`}>
+                <a href="/howitworks" className={`${styles.btn} ${styles.btn1}`}>
                     <svg>
                         <rect x="2" y="2" fill="none" width="100%" height="100%" />
                     </svg>

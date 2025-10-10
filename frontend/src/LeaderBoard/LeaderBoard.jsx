@@ -67,10 +67,10 @@ export default function LeaderBoard() {
           <div className={styles.graphScroll}>
             <div className={styles.graphInner} style={{ width: `${users.length * 120}px` }}>
               <BarChart width={users.length * 120} height={300} data={users}>
-                <XAxis dataKey="username" stroke="#0ff" />
-                <YAxis stroke="#0ff" />
+                <XAxis dataKey="username" stroke="rgb(168, 242, 166)" />
+                <YAxis stroke="rgb(168, 242, 166)" />
                 <Tooltip />
-                <Bar dataKey="score" fill="#0ff" isAnimationActive={animate} animationDuration={1500} />
+                <Bar dataKey="score" fill="rgb(168, 242, 166)" isAnimationActive={animate} animationDuration={1500} />
               </BarChart>
             </div>
           </div>
