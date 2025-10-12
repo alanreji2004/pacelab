@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom"
 import { useAuthState } from "react-firebase-hooks/auth"
 import AdminNavbar from "../AdminNavbar/AdminNavbar"
 import styles from "./AddChallenges.module.css"
-import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc, getDocs,arrayRemove } from "firebase/firestore"
+import { collection, addDoc, query, where, onSnapshot, updateDoc, doc, deleteDoc, getDocs, arrayRemove } from "firebase/firestore"
 import { sha256 } from "js-sha256"
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL
@@ -17,6 +17,9 @@ export default function AddChallenges() {
   const [link, setLink] = useState("")
   const [score, setScore] = useState("")
   const [flag, setFlag] = useState("")
+  const [difficulty, setDifficulty] = useState("easy")
+  const [section, setSection] = useState("")
+  const [description, setDescription] = useState("")
   const [added, setAdded] = useState([])
   const [published, setPublished] = useState([])
   const [editModal, setEditModal] = useState(false)
@@ -25,6 +28,9 @@ export default function AddChallenges() {
   const [editLink, setEditLink] = useState("")
   const [editScore, setEditScore] = useState("")
   const [editFlag, setEditFlag] = useState("")
+  const [editDifficulty, setEditDifficulty] = useState("easy")
+  const [editSection, setEditSection] = useState("")
+  const [editDescription, setEditDescription] = useState("")
   const [loadingAction, setLoadingAction] = useState(false)
   const [bulkText, setBulkText] = useState("")
   const [confirmUnpublishAllOpen, setConfirmUnpublishAllOpen] = useState(false)
@@ -45,12 +51,12 @@ export default function AddChallenges() {
   if (!user || user.email !== ADMIN_EMAIL) return <Navigate to="/admin/login" replace />
 
   const resetForm = () => {
-    setName(""); setLink(""); setScore(""); setFlag("")
+    setName(""); setLink(""); setScore(""); setFlag(""); setDifficulty("easy"); setSection(""); setDescription("")
   }
 
   const handleAdd = async (e) => {
     e.preventDefault()
-    if (!name || !score || !flag) return
+    if (!name || !score || !flag || !difficulty || !section) return
     setLoadingAction(true)
     const flagHash = sha256(flag.trim())
     await addDoc(collection(db, "challenges"), {
@@ -58,6 +64,9 @@ export default function AddChallenges() {
       link: link.trim() || "",
       score: Number(score),
       flagHash,
+      difficulty,
+      section: section.trim(),
+      description,
       status: "added",
       solves: 0,
       createdAt: Date.now()
@@ -72,11 +81,14 @@ export default function AddChallenges() {
     setEditLink(c.link || "")
     setEditScore(String(c.score || ""))
     setEditFlag("")
+    setEditDifficulty(c.difficulty || "easy")
+    setEditSection(c.section || "")
+    setEditDescription(c.description || "")
     setEditModal(true)
   }
 
   const handleEditSave = async () => {
-    if (!editName || !editScore) return
+    if (!editName || !editScore || !editDifficulty || !editSection) return
     setLoadingAction(true)
     const docRef = doc(db, "challenges", editingId)
     const oldDoc = await (await getDocs(query(collection(db, "challenges"), where("__name__", "==", editingId)))).docs[0]
@@ -84,7 +96,7 @@ export default function AddChallenges() {
     const oldScore = oldData.score
     const newScore = Number(editScore)
     const diff = newScore - oldScore
-    const payload = { name: editName.trim(), link: editLink.trim() || "", score: newScore }
+    const payload = { name: editName.trim(), link: editLink.trim() || "", score: newScore, difficulty: editDifficulty, section: editSection.trim(), description: editDescription }
     if (editFlag) payload.flagHash = sha256(editFlag.trim())
     await updateDoc(docRef, payload)
     if (diff !== 0) {
@@ -108,40 +120,36 @@ export default function AddChallenges() {
     setLoadingAction(false)
   }
 
-
-    const handleDelete = async (id) => {
-  setLoadingAction(true)
-  const challengeDoc = await (await getDocs(query(collection(db, "challenges"), where("__name__", "==", id)))).docs[0]
-  if (challengeDoc) {
-    const cdata = challengeDoc.data()
-    const score = cdata.score
-
-    const usersSnap = await getDocs(collection(db, "users"))
-    for (const u of usersSnap.docs) {
-      const udata = u.data()
-      if (udata.solvedChallenges?.includes(id)) {
-        await updateDoc(doc(db, "users", u.id), {
-          score: (udata.score || 0) - score,
-          solvedChallenges: arrayRemove(id)
-        })
-
-        if (udata.teamId) {
-          const teamDoc = await (await getDocs(query(collection(db, "teams"), where("__name__", "==", udata.teamId)))).docs[0]
-          if (teamDoc) {
-            const tdata = teamDoc.data()
-            await updateDoc(doc(db, "teams", teamDoc.id), {
-              score: (tdata.score || 0) - score,
-              solvedChallenges: arrayRemove(id)
-            })
+  const handleDelete = async (id) => {
+    setLoadingAction(true)
+    const challengeDoc = await (await getDocs(query(collection(db, "challenges"), where("__name__", "==", id)))).docs[0]
+    if (challengeDoc) {
+      const cdata = challengeDoc.data()
+      const score = cdata.score
+      const usersSnap = await getDocs(collection(db, "users"))
+      for (const u of usersSnap.docs) {
+        const udata = u.data()
+        if (udata.solvedChallenges?.includes(id)) {
+          await updateDoc(doc(db, "users", u.id), {
+            score: (udata.score || 0) - score,
+            solvedChallenges: arrayRemove(id)
+          })
+          if (udata.teamId) {
+            const teamDoc = await (await getDocs(query(collection(db, "teams"), where("__name__", "==", udata.teamId)))).docs[0]
+            if (teamDoc) {
+              const tdata = teamDoc.data()
+              await updateDoc(doc(db, "teams", teamDoc.id), {
+                score: (tdata.score || 0) - score,
+                solvedChallenges: arrayRemove(id)
+              })
+            }
           }
         }
       }
+      await deleteDoc(doc(db, "challenges", id))
     }
-
-    await deleteDoc(doc(db, "challenges", id))
+    setLoadingAction(false)
   }
-  setLoadingAction(false)
-}
 
   const handlePublish = async (id) => {
     setLoadingAction(true)
@@ -162,17 +170,20 @@ export default function AddChallenges() {
       parsed = JSON.parse(bulkText)
       if (!Array.isArray(parsed)) throw new Error("not array")
     } catch (err) {
-      setConfirmBulkError("Invalid JSON array. Expected [{name,link,score,flag}, ...]")
+      setConfirmBulkError("Invalid JSON array. Expected [{name,link,score,flag,difficulty,section,description}, ...]")
       return
     }
     setLoadingAction(true)
     for (const item of parsed) {
-      if (!item.name || !item.score || !item.flag) continue
+      if (!item.name || !item.score || !item.flag || !item.difficulty || !item.section) continue
       await addDoc(collection(db, "challenges"), {
         name: String(item.name).trim(),
         link: String(item.link || "").trim(),
         score: Number(item.score),
         flagHash: sha256(String(item.flag).trim()),
+        difficulty: item.difficulty,
+        section: String(item.section).trim(),
+        description: String(item.description || ""),
         status: "added",
         solves: 0,
         createdAt: Date.now()
@@ -213,6 +224,13 @@ export default function AddChallenges() {
               <input className={styles.input} placeholder="Link (optional)" value={link} onChange={(e) => setLink(e.target.value)} />
               <input className={styles.input} placeholder="Score" value={score} onChange={(e) => setScore(e.target.value)} required />
               <input className={styles.input} placeholder="Flag (will be hashed)" value={flag} onChange={(e) => setFlag(e.target.value)} required />
+              <select className={styles.input} value={difficulty} onChange={(e) => setDifficulty(e.target.value)} required>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+              <input className={styles.input} placeholder="Section" value={section} onChange={(e) => setSection(e.target.value)} required />
+              <textarea className={styles.textarea} placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
               <div className={styles.row}>
                 <button className={styles.primaryButton} type="submit" disabled={loadingAction}>{loadingAction ? "Adding..." : "Add"}</button>
                 <button className={styles.secondaryButton} type="button" onClick={() => setBulkModalOpen(true)}>Bulk Add</button>
@@ -235,6 +253,8 @@ export default function AddChallenges() {
                   <div className={styles.cardBody}>
                     <div className={styles.cardLink}>{c.link || "-"}</div>
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
+                    <div className={styles.cardDifficulty}>Difficulty: {c.difficulty}</div>
+                    <div className={styles.cardSection}>Section: {c.section}</div>
                   </div>
                   <div className={styles.cardActions}>
                     <button className={styles.ghostButton} onClick={() => handlePublish(c.id)} disabled={loadingAction}>Publish</button>
@@ -263,6 +283,8 @@ export default function AddChallenges() {
                   <div className={styles.cardBody}>
                     <div className={styles.cardLink}>{c.link || "-"}</div>
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
+                    <div className={styles.cardDifficulty}>Difficulty: {c.difficulty}</div>
+                    <div className={styles.cardSection}>Section: {c.section}</div>
                   </div>
                   <div className={styles.cardActions}>
                     <button className={styles.ghostButton} onClick={() => handleUnpublish(c.id)} disabled={loadingAction}>Unpublish</button>
@@ -279,7 +301,7 @@ export default function AddChallenges() {
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Bulk Add Challenges JSON</h3>
-            <textarea className={styles.textarea} placeholder='[{"name":"x","link":"...","score":100,"flag":"CTF{...}"}, ...]' value={bulkText} onChange={(e) => setBulkText(e.target.value)} />
+            <textarea className={styles.textarea} placeholder='[{"name":"x","link":"...","score":100,"flag":"CTF{...}","difficulty":"easy","section":"...","description":"..."}]' value={bulkText} onChange={(e) => setBulkText(e.target.value)} />
             {confirmBulkError && <div className={styles.formError}>{confirmBulkError}</div>}
             <div className={styles.modalRow}>
               <button className={styles.primaryButton} onClick={handleBulkAdd} disabled={loadingAction}>{loadingAction ? "Adding..." : "Add All"}</button>
@@ -296,6 +318,13 @@ export default function AddChallenges() {
             <input className={styles.input} value={editLink} onChange={(e) => setEditLink(e.target.value)} />
             <input className={styles.input} value={editScore} onChange={(e) => setEditScore(e.target.value)} />
             <input className={styles.input} placeholder="New Flag (leave empty to keep)" value={editFlag} onChange={(e) => setEditFlag(e.target.value)} />
+            <select className={styles.input} value={editDifficulty} onChange={(e) => setEditDifficulty(e.target.value)} required>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+            <input className={styles.input} value={editSection} onChange={(e) => setEditSection(e.target.value)} required />
+            <textarea className={styles.textarea} value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
             <div className={styles.modalRow}>
               <button className={styles.primaryButton} onClick={handleEditSave} disabled={loadingAction}>{loadingAction ? "Saving..." : "Save"}</button>
               <button className={styles.secondaryButton} onClick={() => setEditModal(false)}>Cancel</button>
