@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react"
 import { db, auth } from "../firebase"
 import { useAuthState } from "react-firebase-hooks/auth"
-import { collection, query, where, onSnapshot, doc, runTransaction, arrayUnion, increment } from "firebase/firestore"
+import { collection, query, where, onSnapshot, doc, runTransaction, arrayUnion, increment, serverTimestamp } from "firebase/firestore"
 import Navbar from "../Navbar/Navbar"
 import styles from "./Challenges.module.css"
 import { sha256 } from "js-sha256"
-import { useNavigate, Link } from "react-router-dom"
-import { serverTimestamp } from "firebase/firestore"
+import { useNavigate } from "react-router-dom"
 import ToastContainer from "../Toast/ToastContainer"
 
 export default function Challenges() {
@@ -20,39 +19,27 @@ export default function Challenges() {
   const [loadingAction, setLoadingAction] = useState(false)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/login")
-    }
-  }, [user, loading, navigate])
+  useEffect(() => { if (!loading && !user) navigate("/login") }, [user, loading, navigate])
 
   useEffect(() => {
     const q = query(collection(db, "challenges"), where("status", "==", "published"))
-    const unsub = onSnapshot(q, snap => {
-      setChallenges(snap.docs.map(d => ({ id: d.id, ...d.data() })))
-    })
+    const unsub = onSnapshot(q, snap => setChallenges(snap.docs.map(d => ({ id: d.id, ...d.data() }))))
     return () => unsub()
   }, [])
 
   useEffect(() => {
     if (!user) return
-    const unsubUser = onSnapshot(doc(db, "users", user.uid), d => {
-      if (d.exists()) {
-        setUserData({ id: d.id, ...d.data() })
-      }
-    })
+    const unsubUser = onSnapshot(doc(db, "users", user.uid), d => { if (d.exists()) setUserData({ id: d.id, ...d.data() }) })
     return () => unsubUser()
   }, [user])
 
   if (loading) return null
   if (!user || !userData) return <Navbar />
 
-  const openModal = c => {
-    setSelectedChallenge(c)
-    setFlagInput("")
-    setError("")
-    setModalOpen(true)
-  }
+  const sections = [...new Set(challenges.map(c => c.section))].sort()
+
+  const openModal = c => { setSelectedChallenge(c); setFlagInput(""); setError(""); setModalOpen(true) }
+  const closeModal = () => setModalOpen(false)
 
   const handleSubmitFlag = async () => {
     if (!flagInput || !selectedChallenge) return
@@ -73,9 +60,7 @@ export default function Challenges() {
           solvedChallenges: arrayUnion(selectedChallenge.id),
           lastSolvedAt: serverTimestamp()
         })
-        transaction.update(challengeRef, {
-          solves: increment(1)
-        })
+        transaction.update(challengeRef, { solves: increment(1) })
         const toastRef = doc(collection(db, "toasts"))
         transaction.set(toastRef, {
           username: userData.username || userData.email,
@@ -84,16 +69,16 @@ export default function Challenges() {
         })
       })
       setModalOpen(false)
-    } catch (err) {
-      setError(err.message)
-    }
+    } catch (err) { setError(err.message) }
     setLoadingAction(false)
   }
 
-  const hasSolved = c => {
-    if (!userData) return false
-    if (userData.solvedChallenges?.includes(c.id)) return true
-    return false
+  const hasSolved = c => userData?.solvedChallenges?.includes(c.id)
+
+  const getDifficultyColor = (difficulty) => {
+    if (difficulty === "hard") return "red"
+    if (difficulty === "medium") return "orange"
+    return "green"
   }
 
   return (
@@ -101,47 +86,52 @@ export default function Challenges() {
       <Navbar />
       <div className={styles.container}>
         <h1 className={styles.heading}>Signal Puzzles</h1>
-        <div className={styles.grid}>
-          {challenges.length === 0 && <div className={styles.empty}>No published puzzles</div>}
-          {challenges.map(c => (
-            <div key={c.id} className={styles.card}>
-              <div className={styles.cardHeader}>
-                <Link to={c.link}><div className={styles.cardTitle}>{c.name}</div></Link>
-                <div className={styles.cardScore}>{c.score}</div>
-              </div>
-              <div className={styles.cardBody}>
-                <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
-              </div>
-              <div className={styles.cardActions}>
-                {c.link && (
-                  <button
-                    className={styles.viewButton}
-                    onClick={() => window.open(c.link, "_blank")}
-                  >
-                    View Challenge
-                  </button>
-                )}
-                {hasSolved(c) ? (
-                  <div className={styles.solvedText}>Solved</div>
-                ) : (
-                  <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>Submit Flag</button>
-                )}
-              </div>
+        {sections.map(section => (
+          <div key={section}>
+            <h2 className={styles.sectionTitle}>{section}</h2>
+            <div className={styles.grid}>
+              {challenges.filter(c => c.section === section).map(c => (
+                <div key={c.id} className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <div className={styles.cardTitle}>{c.name}</div>
+                    <div className={styles.cardScore}>{c.score} pts</div>
+                  </div>
+                  <div className={styles.cardBody}>
+                    <div style={{ color: getDifficultyColor(c.difficulty), fontWeight: "bold", marginTop: "5px" }}>{c.difficulty}</div>
+                    <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
+                  </div>
+                  <div className={styles.cardActions}>
+                    {hasSolved(c) ? (
+                      <div className={styles.solvedText}>Solved</div>
+                    ) : (
+                      <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>View Details</button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-      {modalOpen && (
-        <div className={styles.modalWrap}>
-          <div className={styles.modal}>
-            <h3 className={styles.modalTitle}>Submit Flag</h3>
-            <p className={styles.warningText}>Ensure no enemy surveillance when transmitting the code.</p>
-            <input className={styles.input} placeholder="blackout{Enter_Your_Flag}" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
-            {error && <div className={styles.errorText}>{error}</div>}
-            <div className={styles.modalRow}>
-              <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Send"}</button>
-              <button className={styles.secondaryButton} onClick={() => setModalOpen(false)}>Cancel</button>
-            </div>
+      {modalOpen && selectedChallenge && (
+        <div className={styles.modalWrap} onClick={closeModal}>
+          <div className={styles.modal} onClick={e => e.stopPropagation()}>
+            <h3 className={styles.modalTitle}>{selectedChallenge.name}</h3>
+            <p className={styles.modalDescription}>{selectedChallenge.description}</p>
+            <p className={styles.modalDetail}>Points: {selectedChallenge.score}</p>
+            <div style={{ color: getDifficultyColor(selectedChallenge.difficulty), fontWeight: "bold", marginBottom: "10px" }}>{selectedChallenge.difficulty}</div>
+            {selectedChallenge.imageFileName && <img className={styles.modalImage} src={`/assets/${selectedChallenge.imageFileName}`} alt={selectedChallenge.name} />}
+            {selectedChallenge.link && <button className={styles.viewButton} onClick={() => window.open(selectedChallenge.link, "_blank")}>View Challenge</button>}
+            {!hasSolved(selectedChallenge) && (
+              <>
+                <input className={styles.input} placeholder="Enter Flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
+                {error && <div className={styles.errorText}>{error}</div>}
+                <div className={styles.modalRow}>
+                  <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Submit Flag"}</button>
+                  <button className={styles.secondaryButton} onClick={closeModal}>Close</button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

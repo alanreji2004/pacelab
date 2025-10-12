@@ -20,6 +20,7 @@ export default function AddChallenges() {
   const [difficulty, setDifficulty] = useState("easy")
   const [section, setSection] = useState("")
   const [description, setDescription] = useState("")
+  const [imageFileName, setImageFileName] = useState("")
   const [added, setAdded] = useState([])
   const [published, setPublished] = useState([])
   const [editModal, setEditModal] = useState(false)
@@ -31,6 +32,7 @@ export default function AddChallenges() {
   const [editDifficulty, setEditDifficulty] = useState("easy")
   const [editSection, setEditSection] = useState("")
   const [editDescription, setEditDescription] = useState("")
+  const [editImageFileName, setEditImageFileName] = useState("")
   const [loadingAction, setLoadingAction] = useState(false)
   const [bulkText, setBulkText] = useState("")
   const [confirmUnpublishAllOpen, setConfirmUnpublishAllOpen] = useState(false)
@@ -38,12 +40,8 @@ export default function AddChallenges() {
   useEffect(() => {
     const addedQ = query(collection(db, "challenges"), where("status", "==", "added"))
     const pubQ = query(collection(db, "challenges"), where("status", "==", "published"))
-    const unsubA = onSnapshot(addedQ, (snap) => {
-      setAdded(snap.docs.map(d => ({ id: d.id, ...d.data() })))
-    })
-    const unsubP = onSnapshot(pubQ, (snap) => {
-      setPublished(snap.docs.map(d => ({ id: d.id, ...d.data() })))
-    })
+    const unsubA = onSnapshot(addedQ, (snap) => setAdded(snap.docs.map(d => ({ id: d.id, ...d.data() }))))
+    const unsubP = onSnapshot(pubQ, (snap) => setPublished(snap.docs.map(d => ({ id: d.id, ...d.data() }))))
     return () => { unsubA(); unsubP(); }
   }, [])
 
@@ -51,7 +49,7 @@ export default function AddChallenges() {
   if (!user || user.email !== ADMIN_EMAIL) return <Navigate to="/admin/login" replace />
 
   const resetForm = () => {
-    setName(""); setLink(""); setScore(""); setFlag(""); setDifficulty("easy"); setSection(""); setDescription("")
+    setName(""); setLink(""); setScore(""); setFlag(""); setDifficulty("easy"); setSection(""); setDescription(""); setImageFileName("")
   }
 
   const handleAdd = async (e) => {
@@ -67,6 +65,7 @@ export default function AddChallenges() {
       difficulty,
       section: section.trim(),
       description,
+      imageFileName: imageFileName.trim() || "",
       status: "added",
       solves: 0,
       createdAt: Date.now()
@@ -84,6 +83,7 @@ export default function AddChallenges() {
     setEditDifficulty(c.difficulty || "easy")
     setEditSection(c.section || "")
     setEditDescription(c.description || "")
+    setEditImageFileName(c.imageFileName || "")
     setEditModal(true)
   }
 
@@ -96,7 +96,15 @@ export default function AddChallenges() {
     const oldScore = oldData.score
     const newScore = Number(editScore)
     const diff = newScore - oldScore
-    const payload = { name: editName.trim(), link: editLink.trim() || "", score: newScore, difficulty: editDifficulty, section: editSection.trim(), description: editDescription }
+    const payload = {
+      name: editName.trim(),
+      link: editLink.trim() || "",
+      score: newScore,
+      difficulty: editDifficulty,
+      section: editSection.trim(),
+      description: editDescription,
+      imageFileName: editImageFileName.trim() || ""
+    }
     if (editFlag) payload.flagHash = sha256(editFlag.trim())
     await updateDoc(docRef, payload)
     if (diff !== 0) {
@@ -130,18 +138,12 @@ export default function AddChallenges() {
       for (const u of usersSnap.docs) {
         const udata = u.data()
         if (udata.solvedChallenges?.includes(id)) {
-          await updateDoc(doc(db, "users", u.id), {
-            score: (udata.score || 0) - score,
-            solvedChallenges: arrayRemove(id)
-          })
+          await updateDoc(doc(db, "users", u.id), { score: (udata.score || 0) - score, solvedChallenges: arrayRemove(id) })
           if (udata.teamId) {
             const teamDoc = await (await getDocs(query(collection(db, "teams"), where("__name__", "==", udata.teamId)))).docs[0]
             if (teamDoc) {
               const tdata = teamDoc.data()
-              await updateDoc(doc(db, "teams", teamDoc.id), {
-                score: (tdata.score || 0) - score,
-                solvedChallenges: arrayRemove(id)
-              })
+              await updateDoc(doc(db, "teams", teamDoc.id), { score: (tdata.score || 0) - score, solvedChallenges: arrayRemove(id) })
             }
           }
         }
@@ -170,7 +172,7 @@ export default function AddChallenges() {
       parsed = JSON.parse(bulkText)
       if (!Array.isArray(parsed)) throw new Error("not array")
     } catch (err) {
-      setConfirmBulkError("Invalid JSON array. Expected [{name,link,score,flag,difficulty,section,description}, ...]")
+      setConfirmBulkError("Invalid JSON array. Expected [{name,link,score,flag,difficulty,section,description,imageFileName}, ...]")
       return
     }
     setLoadingAction(true)
@@ -184,6 +186,7 @@ export default function AddChallenges() {
         difficulty: item.difficulty,
         section: String(item.section).trim(),
         description: String(item.description || ""),
+        imageFileName: String(item.imageFileName || ""),
         status: "added",
         solves: 0,
         createdAt: Date.now()
@@ -196,17 +199,13 @@ export default function AddChallenges() {
 
   const handlePublishAllAdded = async () => {
     setLoadingAction(true)
-    for (const c of added) {
-      await updateDoc(doc(db, "challenges", c.id), { status: "published" })
-    }
+    for (const c of added) await updateDoc(doc(db, "challenges", c.id), { status: "published" })
     setLoadingAction(false)
   }
 
   const handleUnpublishAllPublished = async () => {
     setLoadingAction(true)
-    for (const c of published) {
-      await updateDoc(doc(db, "challenges", c.id), { status: "added" })
-    }
+    for (const c of published) await updateDoc(doc(db, "challenges", c.id), { status: "added" })
     setConfirmUnpublishAllOpen(false)
     setLoadingAction(false)
   }
@@ -231,6 +230,7 @@ export default function AddChallenges() {
               </select>
               <input className={styles.input} placeholder="Section" value={section} onChange={(e) => setSection(e.target.value)} required />
               <textarea className={styles.textarea} placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+              <input className={styles.input} placeholder="Image File Name (optional)" value={imageFileName} onChange={(e) => setImageFileName(e.target.value)} />
               <div className={styles.row}>
                 <button className={styles.primaryButton} type="submit" disabled={loadingAction}>{loadingAction ? "Adding..." : "Add"}</button>
                 <button className={styles.secondaryButton} type="button" onClick={() => setBulkModalOpen(true)}>Bulk Add</button>
@@ -255,6 +255,8 @@ export default function AddChallenges() {
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
                     <div className={styles.cardDifficulty}>Difficulty: {c.difficulty}</div>
                     <div className={styles.cardSection}>Section: {c.section}</div>
+                    <div className={styles.cardDescription}>{c.description}</div>
+                    {c.imageFileName && <div className={styles.cardImageFile}>Image File: {c.imageFileName}</div>}
                   </div>
                   <div className={styles.cardActions}>
                     <button className={styles.ghostButton} onClick={() => handlePublish(c.id)} disabled={loadingAction}>Publish</button>
@@ -285,6 +287,8 @@ export default function AddChallenges() {
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
                     <div className={styles.cardDifficulty}>Difficulty: {c.difficulty}</div>
                     <div className={styles.cardSection}>Section: {c.section}</div>
+                    <div className={styles.cardDescription}>{c.description}</div>
+                    {c.imageFileName && <div className={styles.cardImageFile}>Image File: {c.imageFileName}</div>}
                   </div>
                   <div className={styles.cardActions}>
                     <button className={styles.ghostButton} onClick={() => handleUnpublish(c.id)} disabled={loadingAction}>Unpublish</button>
@@ -301,7 +305,7 @@ export default function AddChallenges() {
         <div className={styles.modalWrap}>
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Bulk Add Challenges JSON</h3>
-            <textarea className={styles.textarea} placeholder='[{"name":"x","link":"...","score":100,"flag":"CTF{...}","difficulty":"easy","section":"...","description":"..."}]' value={bulkText} onChange={(e) => setBulkText(e.target.value)} />
+            <textarea className={styles.textarea} placeholder='[{"name":"x","link":"...","score":100,"flag":"CTF{...}","difficulty":"easy","section":"...","description":"...","imageFileName":"..."}]' value={bulkText} onChange={(e) => setBulkText(e.target.value)} />
             {confirmBulkError && <div className={styles.formError}>{confirmBulkError}</div>}
             <div className={styles.modalRow}>
               <button className={styles.primaryButton} onClick={handleBulkAdd} disabled={loadingAction}>{loadingAction ? "Adding..." : "Add All"}</button>
@@ -325,6 +329,7 @@ export default function AddChallenges() {
             </select>
             <input className={styles.input} value={editSection} onChange={(e) => setEditSection(e.target.value)} required />
             <textarea className={styles.textarea} value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
+            <input className={styles.input} placeholder="Image File Name (optional)" value={editImageFileName} onChange={(e) => setEditImageFileName(e.target.value)} />
             <div className={styles.modalRow}>
               <button className={styles.primaryButton} onClick={handleEditSave} disabled={loadingAction}>{loadingAction ? "Saving..." : "Save"}</button>
               <button className={styles.secondaryButton} onClick={() => setEditModal(false)}>Cancel</button>

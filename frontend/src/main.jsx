@@ -15,7 +15,6 @@ import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import ViewTeams from "./ViewTeams/ViewTeams" 
 import ViewIndividual from "./ViewIndividual/ViewIndividual"
 import HowItWorks from "./HowItWorks/HowItWorks"
-import Challenge1 from "./Challenges/Challenge1"
 
 const router = createBrowserRouter([
   {
@@ -39,7 +38,6 @@ const router = createBrowserRouter([
       { path: "/admin/view-teams", element: <ViewTeams /> },
       { path: "/admin/view-individuals", element: <ViewIndividual /> },
       { path: "/howitworks", element: <HowItWorks /> },
-      { path: "/challenges/cordinatesofsilence", element: <Challenge1/> }
     ],
   },
 ])
