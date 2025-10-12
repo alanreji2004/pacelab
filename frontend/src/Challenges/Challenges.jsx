@@ -85,7 +85,7 @@ export default function Challenges() {
     <div className={styles.page}>
       <Navbar />
       <div className={styles.container}>
-        <h1 className={styles.heading}>Signal Puzzles</h1>
+        <h1 className={styles.heading}>Challenges</h1>
         {sections.map(section => (
           <div key={section}>
             <h2 className={styles.sectionTitle}>{section}</h2>
