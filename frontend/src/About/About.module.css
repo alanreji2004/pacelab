@@ -5,7 +5,6 @@
   min-height: 100vh;
   perspective: 1000px;
   overflow: hidden;
-  background-color: #010408;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,11 +1,9 @@
 import Footer from "../Footer/Footer"
-import Navbar from "../Navbar/Navbar"
 import styles from "./About.module.css"
 
 const About = () => {
   return (
-    <div className={styles.perspectiveContainer}>
-      <Navbar />
+    <div className={styles.perspectiveContainer}>  
       <div className={styles.content}>
         <h1 className={styles.title}>WHAT IS BLACKOUT: CTF?</h1>
         <p>

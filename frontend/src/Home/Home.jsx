@@ -1,43 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styles from './Home.module.css';
-import cyberImg from '../assets/cyberpunk.webp';
-import Navbar from '../Navbar/Navbar';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import styles from "./Home.module.css";
+import Navbar from "../Navbar/Navbar";
+import About from "../About/About";
+import heroImage from "../assets/cyberpunk.webp";
+import spaceship from "../assets/spaceship2.webp";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 
-const Home = () => {
-    
-return (
-    <div className={styles.perspectiveContainer}>
+export default function Home() {
+  const [text, setText] = useState("");
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const message = "BLACKOUT CTF 2025";
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      setText(message.substring(0, index));
+      index++;
+      if (index > message.length) clearInterval(interval);
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      if (u) setUser(u);
+      else setUser(null);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleMainButton = () => {
+    navigate(user ? "/profile" : "/login");
+  };
+
+  const handleRules = () => {
+    navigate("/howitworks");
+  };
+
+  return (
+    <div className={styles.mainContainer}>
+      <div className={styles.perspectiveContainer}>
         <Navbar />
         <div className={styles.gridPlane}></div>
-
         <div className={styles.content}>
-            <h1 className={styles.heading} data-text="Blackout CTF">
-                <span className={styles.titleMain}>Blackout</span>
-                <span className={styles.titleMain}>CTF</span>
-            </h1>
-            <div className={styles.buttons}>
-                <Link to="/profile" className={`${styles.btn} ${styles.btn1}`}>
-                    <svg>
-                        <rect x="2" y="2" fill="none" width="100%" height="100%" />
-                    </svg>
-                    JOIN
-                </Link>
-
-                <a href="/howitworks" className={`${styles.btn} ${styles.btn1}`}>
-                    <svg>
-                        <rect x="2" y="2" fill="none" width="100%" height="100%" />
-                    </svg>
-                    HOW IT WORKS
-                </a>
-            </div>
+          <h1 className={styles.heading} data-text="BLACKOUT CTF 2025">
+            <span className={styles.titleMain}>{text}</span>
+          </h1>
+          <div className={styles.buttons}>
+            <button onClick={handleMainButton} className={`${styles.btn} ${styles.btn1}`}>
+              <svg>
+                <rect x="0" y="0" fill="none" width="100%" height="100%"></rect>
+              </svg>
+              Start
+            </button>
+            <button onClick={handleRules} className={`${styles.btn} ${styles.btn1}`}>
+              <svg>
+                <rect x="0" y="0" fill="none" width="100%" height="100%"></rect>
+              </svg>
+              View Rules
+            </button>
+          </div>
         </div>
-
         <div className={styles.imageWrapper}>
-            <img src={cyberImg} alt="Cyber Illustration" className={styles.heroImage} />
+          <img src={heroImage} alt="hero" className={styles.heroImage} />
         </div>
+      </div>
+      <section id="about" className={styles.aboutSection}>
+        <img src={spaceship} alt="spaceship" className={styles.spaceshipImage} />
+        <About />
+      </section>
     </div>
   );
-};
-
-export default Home;
+}

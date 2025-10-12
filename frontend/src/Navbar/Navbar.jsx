@@ -56,7 +56,6 @@ const Navbar = () => {
       </div>
 
       <ul className={styles.navLinks}>
-        <li><Link to="/about">About</Link></li>
         <li><Link to="/challenges">Challenges</Link></li>
         <li><Link to="/leaderboard">LeaderBoard</Link></li>
       </ul>
