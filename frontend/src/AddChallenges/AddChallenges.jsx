@@ -229,7 +229,13 @@ export default function AddChallenges() {
                 <option value="hard">Hard</option>
               </select>
               <input className={styles.input} placeholder="Section" value={section} onChange={(e) => setSection(e.target.value)} required />
-              <textarea className={styles.textarea} placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+              <div
+                className={styles.textarea}
+                contentEditable="true"
+                data-placeholder="Description"
+                onInput={(e) => setDescription(e.currentTarget.innerHTML.trim())}
+                suppressContentEditableWarning={true}
+              ></div>
               <input className={styles.input} placeholder="Image File Name (optional)" value={imageFileName} onChange={(e) => setImageFileName(e.target.value)} />
               <div className={styles.row}>
                 <button className={styles.primaryButton} type="submit" disabled={loadingAction}>{loadingAction ? "Adding..." : "Add"}</button>
@@ -255,7 +261,7 @@ export default function AddChallenges() {
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
                     <div className={styles.cardDifficulty}>Difficulty: {c.difficulty}</div>
                     <div className={styles.cardSection}>Section: {c.section}</div>
-                    <div className={styles.cardDescription}>{c.description}</div>
+                    <div className={styles.cardDescription} dangerouslySetInnerHTML={{ __html: c.description }}></div>
                     {c.imageFileName && <div className={styles.cardImageFile}>Image File: {c.imageFileName}</div>}
                   </div>
                   <div className={styles.cardActions}>
@@ -287,7 +293,7 @@ export default function AddChallenges() {
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
                     <div className={styles.cardDifficulty}>Difficulty: {c.difficulty}</div>
                     <div className={styles.cardSection}>Section: {c.section}</div>
-                    <div className={styles.cardDescription}>{c.description}</div>
+                    <div className={styles.cardDescription} dangerouslySetInnerHTML={{ __html: c.description }}></div>
                     {c.imageFileName && <div className={styles.cardImageFile}>Image File: {c.imageFileName}</div>}
                   </div>
                   <div className={styles.cardActions}>
@@ -328,7 +334,14 @@ export default function AddChallenges() {
               <option value="hard">Hard</option>
             </select>
             <input className={styles.input} value={editSection} onChange={(e) => setEditSection(e.target.value)} required />
-            <textarea className={styles.textarea} value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
+            <div
+              className={styles.textarea}
+              contentEditable="true"
+              data-placeholder="Edit Description"
+              onInput={(e) => setEditDescription(e.currentTarget.innerHTML.trim())}
+              dangerouslySetInnerHTML={{ __html: editDescription }}
+              suppressContentEditableWarning={true}
+            ></div>
             <input className={styles.input} placeholder="Image File Name (optional)" value={editImageFileName} onChange={(e) => setEditImageFileName(e.target.value)} />
             <div className={styles.modalRow}>
               <button className={styles.primaryButton} onClick={handleEditSave} disabled={loadingAction}>{loadingAction ? "Saving..." : "Save"}</button>
@@ -352,3 +365,4 @@ export default function AddChallenges() {
     </div>
   )
 }
+  
