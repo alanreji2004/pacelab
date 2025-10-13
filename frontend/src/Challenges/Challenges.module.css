@@ -181,9 +181,15 @@ body {
 }
 
 .modalImage {
-  width: 100%;
+  width: 200px;
+  height: 200px;
   margin-top: 0.5rem;
   object-fit: cover;
+}
+
+.modaImageWrap{
+  display: flex;
+  justify-content: center;
 }
 
 .input {
@@ -222,4 +228,12 @@ body {
 
 .viewButton:hover {
   background-color: #585858;
+}
+.modalHeader {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-size: 16px;
 }

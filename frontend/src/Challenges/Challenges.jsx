@@ -75,7 +75,7 @@ export default function Challenges() {
 
   const hasSolved = c => userData?.solvedChallenges?.includes(c.id)
 
-  const getDifficultyColor = (difficulty) => {
+  const getDifficultyColor = difficulty => {
     if (difficulty === "hard") return "red"
     if (difficulty === "medium") return "orange"
     return "green"
@@ -94,10 +94,12 @@ export default function Challenges() {
                 <div key={c.id} className={styles.card}>
                   <div className={styles.cardHeader}>
                     <div className={styles.cardTitle}>{c.name}</div>
-                    <div className={styles.cardScore}>{c.score} pts</div>
+                    <div className={styles.cardMeta}>
+                      <span style={{ color: getDifficultyColor(c.difficulty), fontWeight: "bold" }}>{c.difficulty}</span>
+                      <span className={styles.cardScore}>{c.score} pts</span>
+                    </div>
                   </div>
                   <div className={styles.cardBody}>
-                    <div style={{ color: getDifficultyColor(c.difficulty), fontWeight: "bold", marginTop: "5px" }}>{c.difficulty}</div>
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
                   </div>
                   <div className={styles.cardActions}>
@@ -117,21 +119,31 @@ export default function Challenges() {
         <div className={styles.modalWrap} onClick={closeModal}>
           <div className={styles.modal} onClick={e => e.stopPropagation()}>
             <h3 className={styles.modalTitle}>{selectedChallenge.name}</h3>
-            <p className={styles.modalDescription}>{selectedChallenge.description}</p>
-            <p className={styles.modalDetail}>Points: {selectedChallenge.score}</p>
-            <div style={{ color: getDifficultyColor(selectedChallenge.difficulty), fontWeight: "bold", marginBottom: "10px" }}>{selectedChallenge.difficulty}</div>
-            {selectedChallenge.imageFileName && <img className={styles.modalImage} src={`/assets/${selectedChallenge.imageFileName}`} alt={selectedChallenge.name} />}
-            {selectedChallenge.link && <button className={styles.viewButton} onClick={() => window.open(selectedChallenge.link, "_blank")}>View Challenge</button>}
-            {!hasSolved(selectedChallenge) && (
-              <>
-                <input className={styles.input} placeholder="Enter Flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
-                {error && <div className={styles.errorText}>{error}</div>}
-                <div className={styles.modalRow}>
-                  <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Submit Flag"}</button>
-                  <button className={styles.secondaryButton} onClick={closeModal}>Close</button>
+            <div className={styles.modalHeader}>
+              <span style={{ color: getDifficultyColor(selectedChallenge.difficulty), fontWeight: "bold" }}>{selectedChallenge.difficulty}</span>
+              <span className={styles.modalPoints}>{selectedChallenge.score} pts</span>
+            </div>
+            <div className={styles.modalContent}>
+              <div dangerouslySetInnerHTML={{ __html: selectedChallenge.description }} />
+              {selectedChallenge.imageFileName && (
+                <div className={styles.modalImageWrap}>
+                  <img className={styles.modalImage} src={`/assets/${selectedChallenge.imageFileName}`} alt={selectedChallenge.name} />
                 </div>
-              </>
-            )}
+              )}
+              {selectedChallenge.link && (
+                <a className={styles.modalLink} href={selectedChallenge.link} target="_blank" rel="noopener noreferrer">View Challenge</a>
+              )}
+              {!hasSolved(selectedChallenge) && (
+                <div className={styles.flagSection}>
+                  <input className={styles.input} placeholder="Enter Flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
+                  {error && <div className={styles.errorText}>{error}</div>}
+                  <div className={styles.modalRow}>
+                    <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Submit Flag"}</button>
+                    <button className={styles.secondaryButton} onClick={closeModal}>Close</button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
