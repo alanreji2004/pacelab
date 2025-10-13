@@ -96,7 +96,7 @@ export default function Challenges() {
                     <div className={styles.cardTitle}>{c.name}</div>
                     <div className={styles.cardMeta}>
                       <span style={{ color: getDifficultyColor(c.difficulty), fontWeight: "bold" }}>{c.difficulty}</span>
-                      <span className={styles.cardScore}>{c.score} pts</span>
+                      <span className={styles.cardScore}>{c.score}pts</span>
                     </div>
                   </div>
                   <div className={styles.cardBody}>
