@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { db, auth } from "../firebase"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { collection, query, where, onSnapshot, doc, runTransaction, arrayUnion, increment, serverTimestamp } from "firebase/firestore"
@@ -19,6 +19,12 @@ export default function Challenges() {
   const [loadingAction, setLoadingAction] = useState(false)
   const navigate = useNavigate()
 
+  const SECTION_ORDER = [
+    "miscellaneous",
+    "web exploitation",
+    "forensics"
+  ]
+
   useEffect(() => { if (!loading && !user) navigate("/login") }, [user, loading, navigate])
 
   useEffect(() => {
@@ -33,10 +39,20 @@ export default function Challenges() {
     return () => unsubUser()
   }, [user])
 
-  if (loading) return null
-  if (!user || !userData) return <Navbar />
+  const normalized = s => (s || "").toString().trim().toLowerCase()
 
-  const sections = [...new Set(challenges.map(c => c.section))].sort()
+  const sections = useMemo(() => {
+    const sectionSet = new Set()
+    challenges.forEach(c => { if (c.section) sectionSet.add(c.section.toString().trim()) })
+    const allSections = Array.from(sectionSet)
+    const lowerToOriginal = {}
+    allSections.forEach(s => { lowerToOriginal[normalized(s)] = s })
+    const ordered = []
+    SECTION_ORDER.forEach(pref => { if (lowerToOriginal[normalized(pref)]) ordered.push(lowerToOriginal[normalized(pref)]) })
+    const remaining = allSections.filter(s => !SECTION_ORDER.includes(normalized(s))).sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:"base"}))
+    return [...ordered, ...remaining]
+  }, [challenges])
+
   const openModal = c => { setSelectedChallenge(c); setFlagInput(""); setError(""); setModalOpen(true) }
   const closeModal = () => setModalOpen(false)
 
@@ -75,6 +91,9 @@ export default function Challenges() {
   const hasSolved = c => userData?.solvedChallenges?.includes(c.id)
   const getDifficultyColor = difficulty => difficulty === "hard" ? "red" : difficulty === "medium" ? "orange" : "green"
 
+  if (loading) return null
+  if (!user || !userData) return <Navbar />
+
   return (
     <div className={styles.page}>
       <Navbar />
@@ -84,7 +103,7 @@ export default function Challenges() {
           <div key={section}>
             <h2 className={styles.sectionTitle}>{section}</h2>
             <div className={styles.grid}>
-              {challenges.filter(c => c.section === section).map(c => (
+              {challenges.filter(c => (c.section || "").toString().trim() === section).map(c => (
                 <div key={c.id} className={styles.card}>
                   <div className={styles.cardHeader}>
                     <div className={styles.cardTitle}>{c.name}</div>
@@ -119,7 +138,7 @@ export default function Challenges() {
             </div>
             <div className={styles.modalContent}>
               <div dangerouslySetInnerHTML={{ __html: selectedChallenge.description }} />
-              {selectedChallenge.imageFileName && selectedChallenge.imageFileName.endsWith(".mp3") && (
+              {selectedChallenge.imageFileName && selectedChallenge.imageFileName.toString().trim().toLowerCase().endsWith(".mp3") && (
                 <div className={styles.audioWrap}>
                   <audio controls className={styles.audioPlayer}>
                     <source src={`/assets/${selectedChallenge.imageFileName}`} type="audio/mpeg" />
@@ -127,7 +146,7 @@ export default function Challenges() {
                   <a className={styles.downloadButton} href={`/assets/${selectedChallenge.imageFileName}`} download>Download Audio</a>
                 </div>
               )}
-              {selectedChallenge.imageFileName && !selectedChallenge.imageFileName.endsWith(".mp3") && (
+              {selectedChallenge.imageFileName && !selectedChallenge.imageFileName.toString().trim().toLowerCase().endsWith(".mp3") && (
                 <div className={styles.modalImageWrap}>
                   <img className={styles.modalImage} src={`/assets/${selectedChallenge.imageFileName}`} alt={selectedChallenge.name} />
                 </div>
