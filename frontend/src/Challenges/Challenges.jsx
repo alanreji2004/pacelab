@@ -37,7 +37,6 @@ export default function Challenges() {
   if (!user || !userData) return <Navbar />
 
   const sections = [...new Set(challenges.map(c => c.section))].sort()
-
   const openModal = c => { setSelectedChallenge(c); setFlagInput(""); setError(""); setModalOpen(true) }
   const closeModal = () => setModalOpen(false)
 
@@ -74,12 +73,7 @@ export default function Challenges() {
   }
 
   const hasSolved = c => userData?.solvedChallenges?.includes(c.id)
-
-  const getDifficultyColor = difficulty => {
-    if (difficulty === "hard") return "red"
-    if (difficulty === "medium") return "orange"
-    return "green"
-  }
+  const getDifficultyColor = difficulty => difficulty === "hard" ? "red" : difficulty === "medium" ? "orange" : "green"
 
   return (
     <div className={styles.page}>
@@ -125,7 +119,15 @@ export default function Challenges() {
             </div>
             <div className={styles.modalContent}>
               <div dangerouslySetInnerHTML={{ __html: selectedChallenge.description }} />
-              {selectedChallenge.imageFileName && (
+              {selectedChallenge.imageFileName && selectedChallenge.imageFileName.endsWith(".mp3") && (
+                <div className={styles.audioWrap}>
+                  <audio controls className={styles.audioPlayer}>
+                    <source src={`/assets/${selectedChallenge.imageFileName}`} type="audio/mpeg" />
+                  </audio>
+                  <a className={styles.downloadButton} href={`/assets/${selectedChallenge.imageFileName}`} download>Download Audio</a>
+                </div>
+              )}
+              {selectedChallenge.imageFileName && !selectedChallenge.imageFileName.endsWith(".mp3") && (
                 <div className={styles.modalImageWrap}>
                   <img className={styles.modalImage} src={`/assets/${selectedChallenge.imageFileName}`} alt={selectedChallenge.name} />
                 </div>

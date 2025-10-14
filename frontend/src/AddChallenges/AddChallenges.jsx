@@ -224,9 +224,10 @@ export default function AddChallenges() {
               <input className={styles.input} placeholder="Score" value={score} onChange={(e) => setScore(e.target.value)} required />
               <input className={styles.input} placeholder="Flag (will be hashed)" value={flag} onChange={(e) => setFlag(e.target.value)} required />
               <select className={styles.input} value={difficulty} onChange={(e) => setDifficulty(e.target.value)} required>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+                <option value="Very Easy">Very Easy</option>
               </select>
               <input className={styles.input} placeholder="Section" value={section} onChange={(e) => setSection(e.target.value)} required />
               <div
@@ -329,9 +330,10 @@ export default function AddChallenges() {
             <input className={styles.input} value={editScore} onChange={(e) => setEditScore(e.target.value)} />
             <input className={styles.input} placeholder="New Flag (leave empty to keep)" value={editFlag} onChange={(e) => setEditFlag(e.target.value)} />
             <select className={styles.input} value={editDifficulty} onChange={(e) => setEditDifficulty(e.target.value)} required>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+              <option value="Very Easy">Very Easy</option>
             </select>
             <input className={styles.input} value={editSection} onChange={(e) => setEditSection(e.target.value)} required />
             <div
