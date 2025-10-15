@@ -7,6 +7,7 @@ import styles from "./Challenges.module.css"
 import { sha256 } from "js-sha256"
 import { useNavigate } from "react-router-dom"
 import ToastContainer from "../Toast/ToastContainer"
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function Challenges() {
   const [user, loading] = useAuthState(auth)
@@ -162,7 +163,7 @@ export default function Challenges() {
                 {hasSolved(selectedChallenge) && (
                   <div className={styles.solvedTop}>
                     <div className={styles.solvedBox}>
-                      <div className={styles.solvedCircle}>✓</div>
+                      <FaCheckCircle />
                     </div>
                     <div className={styles.solvedTextModal}>You have solved this challenge</div>
                   </div>

@@ -307,14 +307,14 @@ html, body {
 
 .solvedTop {
   display: flex;
-  gap: 12px;
+  gap: 3px;
   align-items: center;
+  justify-content: center;
 }
 
 .solvedBox {
   width: 48px;
   height: 48px;
-  background: #1db954;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -328,7 +328,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1db954;
   font-weight: 800;
 }
 
@@ -347,7 +346,6 @@ html, body {
 .solvedInner {
   width: 24px;
   height: 24px;
-  background: #1db954;
   display: flex;
   align-items: center;
   justify-content: center;
