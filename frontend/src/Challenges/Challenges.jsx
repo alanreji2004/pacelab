@@ -89,7 +89,14 @@ export default function Challenges() {
   }
 
   const hasSolved = c => userData?.solvedChallenges?.includes(c.id)
-  const getDifficultyColor = difficulty => difficulty === "hard" ? "red" : difficulty === "medium" ? "orange" : "green"
+  const getDifficultyColor = difficulty => {
+    const d = normalized(difficulty)
+    if (d === "very easy") return "#7ddc5b"
+    if (d === "easy") return "#36b37e"
+    if (d === "medium") return "#f59e0b"
+    if (d === "hard") return "#ef4444"
+    return "#9ca3af"
+  }
 
   if (loading) return null
   if (!user || !userData) return <Navbar />
@@ -116,11 +123,8 @@ export default function Challenges() {
                     <div className={styles.cardSolves}>Solves: {c.solves || 0}</div>
                   </div>
                   <div className={styles.cardActions}>
-                    {hasSolved(c) ? (
-                      <div className={styles.solvedText}>Solved</div>
-                    ) : (
-                      <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>View Details</button>
-                    )}
+                    {hasSolved(c) && <div className={styles.solvedBadgeCard}><div className={styles.solvedLabel}>Solved</div></div>}
+                    <button className={styles.primaryButton} onClick={() => openModal(c)} disabled={loadingAction}>View Details</button>
                   </div>
                 </div>
               ))}
@@ -154,16 +158,22 @@ export default function Challenges() {
               {selectedChallenge.link && (
                 <a className={styles.modalLink} href={selectedChallenge.link} target="_blank" rel="noopener noreferrer">View Challenge</a>
               )}
-              {!hasSolved(selectedChallenge) && (
-                <div className={styles.flagSection}>
-                  <input className={styles.input} placeholder="Enter Flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} />
-                  {error && <div className={styles.errorText}>{error}</div>}
-                  <div className={styles.modalRow}>
-                    <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={loadingAction}>{loadingAction ? "Checking..." : "Submit Flag"}</button>
-                    <button className={styles.secondaryButton} onClick={closeModal}>Close</button>
+              <div className={styles.flagSection}>
+                {hasSolved(selectedChallenge) && (
+                  <div className={styles.solvedTop}>
+                    <div className={styles.solvedBox}>
+                      <div className={styles.solvedCircle}>✓</div>
+                    </div>
+                    <div className={styles.solvedTextModal}>You have solved this challenge</div>
                   </div>
+                )}
+                <input className={styles.input} placeholder="Enter Flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} disabled={hasSolved(selectedChallenge) || loadingAction} />
+                {error && <div className={styles.errorText}>{error}</div>}
+                <div className={styles.modalRow}>
+                  <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={hasSolved(selectedChallenge) || loadingAction}>{hasSolved(selectedChallenge) ? "Solved" : (loadingAction ? "Checking..." : "Submit Flag")}</button>
+                  <button className={styles.secondaryButton} onClick={closeModal}>Close</button>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

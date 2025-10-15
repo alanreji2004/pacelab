@@ -6,6 +6,10 @@
   --panel: rgba(0,0,0,0.4);
   --muted: #9ca89e;
   --danger: #ff4d4d;
+  --very-easy: #7ddc5b;
+  --easy: #36b37e;
+  --medium: #f59e0b;
+  --hard: #ef4444;
 }
 
 html, body {
@@ -104,6 +108,7 @@ html, body {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .primaryButton {
@@ -203,7 +208,7 @@ html, body {
   max-width: 100%;
   height: auto;
   object-fit: contain;
-  border-radius: 8px;
+  border: none;
 }
 
 .input {
@@ -238,10 +243,6 @@ html, body {
   cursor: pointer;
   font-size: 14px;
   font-weight: 800;
-}
-
-.viewButton:hover {
-  background-color: #585858;
 }
 
 .flagSection {
@@ -291,7 +292,7 @@ html, body {
   width: 100%;
   max-width: 400px;
   outline: none;
-  border-radius: 8px;
+  border: none;
 }
 
 .downloadButton {
@@ -299,12 +300,63 @@ html, body {
   color: #000;
   font-weight: 700;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
   text-decoration: none;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.downloadButton:hover {
-  background: rgb(150, 230, 140);
+.solvedTop {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.solvedBox {
+  width: 48px;
+  height: 48px;
+  background: #1db954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solvedCircle {
+  width: 28px;
+  height: 28px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1db954;
+  font-weight: 800;
+}
+
+.solvedTextModal {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.solvedBadgeCard {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.solvedInner {
+  width: 24px;
+  height: 24px;
+  background: #1db954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: 900;
+}
+
+.solvedLabel {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.95rem;
 }
