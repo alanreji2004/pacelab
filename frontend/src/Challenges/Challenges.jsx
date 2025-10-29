@@ -42,17 +42,28 @@ export default function Challenges() {
 
   const normalized = s => (s || "").toString().trim().toLowerCase()
 
-  const sections = useMemo(() => {
-    const sectionSet = new Set()
-    challenges.forEach(c => { if (c.section) sectionSet.add(c.section.toString().trim()) })
-    const allSections = Array.from(sectionSet)
-    const lowerToOriginal = {}
-    allSections.forEach(s => { lowerToOriginal[normalized(s)] = s })
-    const ordered = []
-    SECTION_ORDER.forEach(pref => { if (lowerToOriginal[normalized(pref)]) ordered.push(lowerToOriginal[normalized(pref)]) })
-    const remaining = allSections.filter(s => !SECTION_ORDER.includes(normalized(s))).sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:"base"}))
-    return [...ordered, ...remaining]
-  }, [challenges])
+const sections = useMemo(() => {
+  const sectionSet = new Map()
+  challenges.forEach(c => {
+    const raw = (c.section || "").toString().trim()
+    const norm = normalized(raw)
+    if (raw && !sectionSet.has(norm)) sectionSet.set(norm, raw)
+  })
+  const allSections = Array.from(sectionSet.values())
+  const ordered = []
+  const used = new Set()
+  SECTION_ORDER.forEach(pref => {
+    const norm = normalized(pref)
+    if (sectionSet.has(norm)) {
+      ordered.push(sectionSet.get(norm))
+      used.add(norm)
+    }
+  })
+  const remaining = allSections
+    .filter(s => !used.has(normalized(s)))
+    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }))
+  return [...ordered, ...remaining]
+}, [challenges])
 
   const openModal = c => { setSelectedChallenge(c); setFlagInput(""); setError(""); setModalOpen(true) }
   const closeModal = () => setModalOpen(false)
