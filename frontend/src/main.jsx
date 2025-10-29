@@ -15,7 +15,7 @@ import LeaderBoard from "./LeaderBoard/LeaderBoard"
 import ViewTeams from "./ViewTeams/ViewTeams" 
 import ViewIndividual from "./ViewIndividual/ViewIndividual"
 import HowItWorks from "./HowItWorks/HowItWorks"
-import Found from "./webchallenge1/found"
+import Txt from "./Webchallenge1/Txt"
 import Foundout from "./Webchallenge1/Foundout"
 
 const router = createBrowserRouter([
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       { path: "/admin/view-teams", element: <ViewTeams /> },
       { path: "/admin/view-individuals", element: <ViewIndividual /> },
       { path: "/howitworks", element: <HowItWorks /> },
-      { path: "/aliens.txt", element: <Found /> },
+      { path: "/aliens.txt", element: <Txt /> },
       { path: "/70r3hnanldfspufdsoifnlds.html", element: <Foundout /> },
     ],
   },

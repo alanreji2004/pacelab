@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Found = () => {
+const Txt = () => {
   return (
     <div style={{ backgroundColor: 'white', color: 'black', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         User-agent: * <br />
@@ -9,4 +9,4 @@ const Found = () => {
   )
 }
 
-export default Found
+export default Txt
