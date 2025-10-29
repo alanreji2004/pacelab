@@ -21,9 +21,9 @@ export default function Challenges() {
   const navigate = useNavigate()
 
   const SECTION_ORDER = [
-    "miscellaneous",
-    "web exploitation",
-    "forensics"
+    "Miscellaneous",
+    "Web",
+    "Forensics",
   ]
 
   useEffect(() => { if (!loading && !user) navigate("/login") }, [user, loading, navigate])
@@ -168,7 +168,7 @@ export default function Challenges() {
                     <div className={styles.solvedTextModal}>You have solved this challenge</div>
                   </div>
                 )}
-                <input className={styles.input} placeholder="Enter Flag" value={flagInput} onChange={e => setFlagInput(e.target.value)} disabled={hasSolved(selectedChallenge) || loadingAction} />
+                <input className={styles.input} placeholder="blackout{your_flag}" value={flagInput} onChange={e => setFlagInput(e.target.value)} disabled={hasSolved(selectedChallenge) || loadingAction} />
                 {error && <div className={styles.errorText}>{error}</div>}
                 <div className={styles.modalRow}>
                   <button className={styles.primaryButton} onClick={handleSubmitFlag} disabled={hasSolved(selectedChallenge) || loadingAction}>{hasSolved(selectedChallenge) ? "Solved" : (loadingAction ? "Checking..." : "Submit Flag")}</button>
