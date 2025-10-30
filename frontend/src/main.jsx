@@ -17,6 +17,8 @@ import ViewIndividual from "./ViewIndividual/ViewIndividual"
 import HowItWorks from "./HowItWorks/HowItWorks"
 import Txt from "./Webchallenge1/Txt"
 import Foundout from "./Webchallenge1/Foundout"
+import DocPage from "./WebChallenge2/DocPage"
+import NextPage from "./WebChallenge2/NextPage"
 
 const router = createBrowserRouter([
   {
@@ -40,10 +42,12 @@ const router = createBrowserRouter([
       { path: "/admin/view-teams", element: <ViewTeams /> },
       { path: "/admin/view-individuals", element: <ViewIndividual /> },
       { path: "/howitworks", element: <HowItWorks /> },
-      { path: "/aliens.txt", element: <Txt /> },
-      { path: "/70r3hnanldfspufdsoifnlds.html", element: <Foundout /> },
     ],
   },
+  { path: "/aliens.txt", element: <Txt /> },
+  { path: "/70r3hnanldfspufdsoifnlds.html", element: <Foundout /> },
+  { path: "/doc/:id", element: <DocPage /> },
+  { path: "/doc/:id/next", element: <NextPage /> },
 ])
 
 createRoot(document.getElementById("root")).render(
