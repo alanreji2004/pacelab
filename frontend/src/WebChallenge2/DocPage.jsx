@@ -23,6 +23,7 @@ export default function DocPage() {
         setProgress((audio.currentTime / audio.duration) * 100)
       }
     }
+    
     audio.addEventListener("timeupdate", updateProgress)
     return () => audio.removeEventListener("timeupdate", updateProgress)
   }, [audio])
