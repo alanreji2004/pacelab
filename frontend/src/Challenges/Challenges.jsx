@@ -113,6 +113,18 @@ const sections = useMemo(() => {
   if (loading) return null
   if (!user || !userData) return <Navbar />
 
+  const isImageFile = (fileName = "") => {
+  const ext = fileName.toLowerCase();
+  return (
+    ext.endsWith(".png") ||
+    ext.endsWith(".jpg") ||
+    ext.endsWith(".jpeg") ||
+    ext.endsWith(".gif") ||
+    ext.endsWith(".webp")
+  );
+};
+
+
   return (
     <div className={styles.page}>
       <Navbar />
@@ -162,11 +174,18 @@ const sections = useMemo(() => {
                   <a className={styles.downloadButton} href={`/assets/${selectedChallenge.imageFileName}`} download>Download Audio</a>
                 </div>
               )}
-              {selectedChallenge.imageFileName && !selectedChallenge.imageFileName.toString().trim().toLowerCase().endsWith(".mp3") && (
-                <div className={styles.modalImageWrap}>
-                  <img className={styles.modalImage} src={`/assets/${selectedChallenge.imageFileName}`} alt={selectedChallenge.name} />
-                </div>
-              )}
+              {selectedChallenge.imageFileName &&
+                isImageFile(selectedChallenge.imageFileName) && (
+                  <div className={styles.downloadOnlyWrap}>
+                    <a
+                      className={styles.downloadButton}
+                      href={`/assets/${selectedChallenge.imageFileName}`}
+                      download
+                    >
+                      Download Image
+                    </a>
+                  </div>
+                )}
               {selectedChallenge.link && (
                 <a className={styles.modalLink} href={selectedChallenge.link} target="_blank" rel="noopener noreferrer">View Challenge</a>
               )}
