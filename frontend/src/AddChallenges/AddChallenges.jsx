@@ -237,7 +237,7 @@ export default function AddChallenges() {
                 onInput={(e) => setDescription(e.currentTarget.innerHTML.trim())}
                 suppressContentEditableWarning={true}
               ></div>
-              <input className={styles.input} placeholder="Image File Name (optional)" value={imageFileName} onChange={(e) => setImageFileName(e.target.value)} />
+              <input className={styles.input} placeholder="File Name (optional)" value={imageFileName} onChange={(e) => setImageFileName(e.target.value)} />
               <div className={styles.row}>
                 <button className={styles.primaryButton} type="submit" disabled={loadingAction}>{loadingAction ? "Adding..." : "Add"}</button>
                 <button className={styles.secondaryButton} type="button" onClick={() => setBulkModalOpen(true)}>Bulk Add</button>

@@ -124,6 +124,10 @@ const sections = useMemo(() => {
   );
 };
 
+const isPdfFile = (fileName = "") => {
+  return fileName.toLowerCase().endsWith(".pdf");
+};
+
 
   return (
     <div className={styles.page}>
@@ -186,6 +190,18 @@ const sections = useMemo(() => {
                     </a>
                   </div>
                 )}
+                {selectedChallenge.imageFileName &&
+                  isPdfFile(selectedChallenge.imageFileName) && (
+                    <div className={styles.downloadOnlyWrap}>
+                      <a
+                        className={styles.downloadButton}
+                        href={`/assets/${selectedChallenge.imageFileName}`}
+                        download
+                      >
+                        Download PDF
+                      </a>
+                    </div>
+                  )}
               {selectedChallenge.link && (
                 <a className={styles.modalLink} href={selectedChallenge.link} target="_blank" rel="noopener noreferrer">View Challenge</a>
               )}
