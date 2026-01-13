@@ -44,8 +44,8 @@ const router = createBrowserRouter([
       { path: "/howitworks", element: <HowItWorks /> },
     ],
   },
-  { path: "/aliens.txt", element: <Txt /> },
-  { path: "/70r3hnanldfspufdsoifnlds.html", element: <Foundout /> },
+  { path: "/aliens", element: <Txt /> },
+  { path: "/70r3hnanldfspufdsoifnlds", element: <Foundout /> },
   { path: "/doc/:id", element: <DocPage /> },
   { path: "/doc/:id/next", element: <NextPage /> },
 ])
