@@ -8,6 +8,7 @@ export default function DocPage() {
   const [active, setActive] = useState(false)
   const [audio] = useState(new Audio("/assets/commence.mp3"))
   const [progress, setProgress] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -23,17 +24,28 @@ export default function DocPage() {
         setProgress((audio.currentTime / audio.duration) * 100)
       }
     }
-    
+
+    const onEnded = () => setIsPlaying(false)
+
     audio.addEventListener("timeupdate", updateProgress)
-    return () => audio.removeEventListener("timeupdate", updateProgress)
+    audio.addEventListener("ended", onEnded)
+    return () => {
+      audio.removeEventListener("timeupdate", updateProgress)
+      audio.removeEventListener("ended", onEnded)
+    }
   }, [audio])
 
   const onClick = () => {
     if (active) {
       navigate(`/doc/${id}/next`)
     } else {
-      audio.currentTime = 0
-      audio.play()
+      if (isPlaying) {
+        audio.pause()
+        setIsPlaying(false)
+      } else {
+        audio.play()
+        setIsPlaying(true)
+      }
     }
   }
 
@@ -57,11 +69,11 @@ export default function DocPage() {
           backgroundColor: "black",
           color: "white",
           border: "none",
-          cursor:"pointer",
+          cursor: "pointer",
           fontFamily: "monospace"
         }}
       >
-        Listen
+        {isPlaying ? "Pause" : "Listen"}
       </button>
       {!active && (
         <div style={{
