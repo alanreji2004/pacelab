@@ -358,3 +358,8 @@ html, body {
   font-weight: 700;
   font-size: 0.95rem;
 }
+.downloadOnlyWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -203,7 +203,15 @@ const isPdfFile = (fileName = "") => {
                     </div>
                   )}
               {selectedChallenge.link && (
-                <a className={styles.modalLink} href={selectedChallenge.link} target="_blank" rel="noopener noreferrer">View Challenge</a>
+                <div className={styles.downloadOnlyWrap}>
+                      <a
+                        className={styles.downloadButton}
+                        href={selectedChallenge.link}
+                        target="_blank"
+                      >
+                        View Challenge
+                      </a>
+                    </div>
               )}
               <div className={styles.flagSection}>
                 {hasSolved(selectedChallenge) && (
