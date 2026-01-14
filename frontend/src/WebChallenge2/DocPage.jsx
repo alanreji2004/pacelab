@@ -91,6 +91,22 @@ export default function DocPage() {
           }}></div>
         </div>
       )}
+      {!active && (
+        <div style={{ maxWidth: "500px", marginBottom: "30px", fontSize: "14px" }}>
+          <br />
+          <br />
+          <p style={{ color: "black" }}>
+            Document throttle detected. Playback state locked until page sync
+            stabilizes.
+          </p><br />
+          <p style={{ color: "black" }}>
+            If audio desyncs, inspect request lifecycle or verify runtime flags.
+          </p><br />
+          <p style={{ color: "black" }}>
+            Some parameters may appear immutable due to client-side caching.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
