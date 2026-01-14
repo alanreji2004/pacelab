@@ -52,7 +52,7 @@ const ProfileNavbar = () => {
   }, [menuOpen])
 
   return (
-    <nav className={styles.navbar} role="navigation" aria-label="Main navigation">
+    <nav className={styles.navbar} role="navigation">
       <div className={styles.navLogo} onClick={() => navigate('/')}>
         <img src={pacelablogo} alt="PaceLab Logo" />
       </div>
@@ -70,9 +70,6 @@ const ProfileNavbar = () => {
         ref={hamburgerRef}
         className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`}
         onClick={() => setMenuOpen((s) => !s)}
-        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={menuOpen}
-        aria-controls="mobile-menu"
       >
         <span className={styles.hamburgerBox}>
           <span className={styles.hamburgerInner} />
@@ -82,8 +79,6 @@ const ProfileNavbar = () => {
         id="mobile-menu"
         ref={menuRef}
         className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
-        role="menu"
-        aria-hidden={!menuOpen}
       >
         <ul>
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
