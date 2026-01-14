@@ -77,36 +77,37 @@ export default function Profile() {
     <div className={styles.outer}>
       <ProfileNavbar />
       <div className={styles.container}>
-        <h1 className={styles.title}>Profile</h1>
+        <h1 className={styles.title}>Agent Profile</h1>
         {!user && (
           <div className={styles.centerBox}>
-            <p className={styles.lead}>You must be logged in</p>
+            <p className={styles.lead}>Access Denied</p>
+            <p className={styles.subLead}>Please authenticate to view your operative status.</p>
             <button className={styles.cta} onClick={() => navigate("/login")}>
-              Go to Login
+              Initialize Login
             </button>
           </div>
         )}
         {user && userData && (
           <div className={styles.centerBox}>
-            <p className={styles.lead}>{userData.username || user.email}</p>
+            <p className={styles.lead}>{userData.username || "Operative"}</p>
             <p className={styles.subLead}>{user.email}</p>
             {user.email === ADMIN_EMAIL ? (
               <div className={styles.actions}>
                 <button className={styles.cta} onClick={() => navigate("/admin/dashboard")}>
-                  View Dashboard
+                  Access Command Center
                 </button>
               </div>
             ) : (
               <div className={styles.teamBox}>
                 <div className={styles.teamHeader}>
-                  <h2 className={styles.teamName}>Score: {userData.score || 0}</h2>
+                  <h2 className={styles.teamName}>Current Score: {userData.score || 0}</h2>
                 </div>
                 <div className={styles.membersList}>
                   <div className={styles.memberHeader}>
-                    <span>Challenge</span>
+                    <span>Mission</span>
                     <span>Points</span>
                   </div>
-                  {solvedList.length === 0 && <p className={styles.lead}>No challenges solved yet</p>}
+                  {solvedList.length === 0 && <p className={styles.subLead} style={{ textAlign: "center", marginTop: "1rem" }}>No missions completed yet</p>}
                   {solvedList.map(c => (
                     <div key={c.id} className={styles.memberRow}>
                       <div className={styles.memberName}>{c.name}</div>
@@ -126,4 +127,3 @@ export default function Profile() {
   )
 }
 
-    

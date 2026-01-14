@@ -1,147 +1,226 @@
-
-* {
-  font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  color: rgb(255, 255, 255);
-}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 .outer {
+  background-color: #010408;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: #000;
-  color: rgb(255, 255, 255);
+  position: relative;
+  overflow-x: hidden;
+  background-image:
+    linear-gradient(rgba(1, 4, 8, 0.95), rgba(1, 4, 8, 0.95)),
+    linear-gradient(0deg, rgba(58, 232, 93, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58, 232, 93, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
 }
 
 .container {
-  margin-top: 7rem;
   flex: 1;
-  padding: 1rem;
+  width: 90%;
+  max-width: 1000px;
+  margin: 9rem auto 4rem;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: rgb(255, 255, 255) !important;
+  position: relative;
+  z-index: 2;
 }
 
 .title {
-  font-size: 2rem;
-  margin: 1rem 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(58, 232, 93, 0.4);
   text-align: center;
-  color: rgb(255, 255, 255) !important;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  display: block;
+  width: 100px;
+  height: 4px;
+  background: #3ae85d;
+  margin: 1rem auto 0;
+  box-shadow: 0 0 10px #3ae85d;
 }
 
 .centerBox {
-  text-align: center;
-  margin-top: 2rem;
   width: 100%;
-  max-width: 900px;
-  color: rgb(255, 255, 255) !important;
+  max-width: 800px;
+  background: rgba(3, 8, 16, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(58, 232, 93, 0.2);
+  padding: 3rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.centerBox::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #3ae85d, transparent);
+  box-shadow: 0 0 15px #3ae85d;
 }
 
 .lead {
-  font-size: 1.2rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
   margin-bottom: 0.5rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .subLead {
+  font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
-  margin-bottom: 1.5rem;
-  color: rgb(255, 255, 255);
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.5px;
 }
 
 .cta {
-  padding: 0.5rem 1.2rem;
-  border: 2px solid rgb(168, 242, 166);
-  background: transparent;
-  color: rgb(255, 255, 255);
+  font-family: 'Orbitron', sans-serif;
+  padding: 1rem 2.5rem;
+  background: rgba(58, 232, 93, 0.1);
+  border: 1px solid #3ae85d;
+  color: #3ae85d;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  font-weight: 700;
 }
 
 .cta:hover {
-  background: rgb(255, 255, 255);
+  background: #3ae85d;
   color: #000;
-}
-
-.error {
-  color: red;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-}
-
-.info {
-  color: rgb(255, 255, 255);
-  margin-top: 1rem;
-  font-size: 0.9rem;
+  box-shadow: 0 0 30px rgba(58, 232, 93, 0.4);
+  transform: translateY(-2px);
 }
 
 .teamBox {
   width: 100%;
-  max-width: 900px;
   margin-top: 2rem;
-  color: rgb(255, 255, 255) !important;
+  text-align: left;
 }
 
 .teamHeader {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1.5rem;
-  color: rgb(255, 255, 255) !important;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .teamName {
-  font-size: 1.5rem;
-  color: rgb(255, 255, 255) !important;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  color: #3ae85d;
+  text-shadow: 0 0 10px rgba(58, 232, 93, 0.3);
 }
 
 .membersList {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  color: rgb(255, 255, 255) !important;
+  gap: 0.8rem;
 }
 
 .memberHeader,
 .memberRow {
   display: grid;
-  grid-template-columns: 1fr 100px;
+  grid-template-columns: 1fr 120px;
+  padding: 1rem 1.5rem;
   align-items: center;
-  text-align: left;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  color: rgb(255, 255, 255) !important;
+  gap: 1rem;
 }
 
 .memberHeader {
-  border-bottom: 2px solid rgb(255, 255, 255);
-  font-weight: 600;
-  color: rgb(255, 255, 255) !important;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+  padding-bottom: 0.5rem;
 }
 
 .memberRow {
-  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-  color: rgb(255, 255, 255) !important;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.memberRow:hover {
+  background: rgba(58, 232, 93, 0.05);
+  border-color: rgba(58, 232, 93, 0.3);
+  transform: translateX(5px);
 }
 
 .memberName {
-  overflow-wrap: anywhere;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 500;
 }
 
 .memberScore {
-  text-align: center;
-  color: rgb(255, 255, 255) !important;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  color: #3ae85d;
+  text-align: right;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #ef4444;
+  margin-top: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.info {
+  color: #3ae85d;
+  margin-top: 1rem;
+  font-family: 'Montserrat', sans-serif;
 }
 
 @media (max-width: 768px) {
-  .title { font-size: 1.6rem; }
-  .memberHeader, .memberRow { grid-template-columns: 1fr 60px; }
-  .cta { font-size: 0.85rem; padding: 0.4rem 1rem; }
-}
-body{
-  color: rgb(255, 255, 255) !important;
-  text-decoration: none !important;
-}
+  .title {
+    font-size: 2.5rem;
+  }
 
+  .centerBox {
+    padding: 1.5rem;
+  }
+
+  .lead {
+    font-size: 1.4rem;
+  }
+
+  .teamName {
+    font-size: 1.5rem;
+  }
+}
