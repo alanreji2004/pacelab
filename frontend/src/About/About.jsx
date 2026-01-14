@@ -1,20 +1,29 @@
+import React, { useEffect } from "react"
+import Navbar from "../Navbar/Navbar"
 import Footer from "../Footer/Footer"
 import styles from "./About.module.css"
 
 const About = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className={styles.perspectiveContainer}>  
+    <div className={styles.perspectiveContainer}>
+      <Navbar />
       <div className={styles.content}>
-        <h1 className={styles.title}>WHAT IS BLACKOUT: CTF?</h1>
-        <p>
-          BLACKOUT isn’t your typical CTF — it’s a story-driven digital mystery where each level unravels a piece of a hidden narrative. Hosted by Pace Lab, this experience blends interactive puzzles, hidden codes, cryptic clues, and web-based challenges that test your curiosity and problem-solving skills.
-        </p><br />
-        <p>
-          Every stage takes you deeper into the unknown — decoding transmissions, uncovering secrets, and piecing together the truth behind the blackout.
-        </p>
-        <p>
-          This isn’t about speed — it’s about insight, persistence, and discovery. Welcome to BLACKOUT. The question is — how far can you go before the lights fade completely?
-        </p>
+        <h1 className={styles.title}>What Is Blackout: CTF?</h1>
+        <div className={styles.textWrapper}>
+          <p>
+            BLACKOUT isn’t your typical CTF — it’s a story-driven digital mystery where each level unravels a piece of a hidden narrative. Hosted by Pace Lab, this experience blends interactive puzzles, hidden codes, cryptic clues, and web-based challenges that test your curiosity and problem-solving skills.
+          </p>
+          <p>
+            Every stage takes you deeper into the unknown — decoding transmissions, uncovering secrets, and piecing together the truth behind the blackout.
+          </p>
+          <p>
+            This isn’t about speed — it’s about insight, persistence, and discovery. Welcome to BLACKOUT. The question is — how far can you go before the lights fade completely?
+          </p>
+        </div>
         <div className={styles.cards}>
           <div className={styles.card}>
             <h3>⚙ Real Challenges</h3>
