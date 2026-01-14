@@ -45,7 +45,7 @@ export default function Home() {
         <Navbar />
         <div className={styles.gridPlane}></div>
         <div className={styles.content}>
-          <h1 className={styles.heading} data-text="BLACKOUT CTF 2025">
+          <h1 className={styles.heading} data-text="BLACKOUT CTF 2026">
             <span className={styles.titleMain}>{text}</span>
           </h1>
           <div className={styles.buttons}>
