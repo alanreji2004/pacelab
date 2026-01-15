@@ -287,7 +287,7 @@
     backdrop-filter: blur(16px);
     border: 1px solid rgba(58, 232, 93, 0.15);
     padding: 3rem 2rem;
-    border-radius: 16px;
+    border-radius: 5px;
     transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease, border-color 0.4s ease;
     display: flex;
     flex-direction: column;
@@ -303,7 +303,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 16px;
+    border-radius: 5px;
     padding: 1px;
     background: linear-gradient(180deg, rgba(58, 232, 93, 0.3), transparent 80%);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
