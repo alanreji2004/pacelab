@@ -12,7 +12,7 @@ import AdminDashboard from "./AdminDashboard/AdminDashboard"
 import AddChallenges from "./AddChallenges/AddChallenges"
 import Challenges from "./Challenges/Challenges"
 import LeaderBoard from "./LeaderBoard/LeaderBoard"
-import ViewTeams from "./ViewTeams/ViewTeams" 
+import ViewTeams from "./ViewTeams/ViewTeams"
 import ViewIndividual from "./ViewIndividual/ViewIndividual"
 import HowItWorks from "./HowItWorks/HowItWorks"
 import Txt from "./Webchallenge1/Txt"
@@ -21,6 +21,15 @@ import DocPage from "./WebChallenge2/DocPage"
 import NextPage from "./WebChallenge2/NextPage"
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", fontSize: "2rem", fontFamily: "sans-serif" }}>
+        Services temporarily not available
+      </div>
+    )
+  },
+  /*
   {
     element: <Loading />, 
     children: [
@@ -48,6 +57,7 @@ const router = createBrowserRouter([
   { path: "/70r3hnanldfspufdsoifnlds", element: <Foundout /> },
   { path: "/doc/:id", element: <DocPage /> },
   { path: "/doc/:id/next", element: <NextPage /> },
+  */
 ])
 
 createRoot(document.getElementById("root")).render(
